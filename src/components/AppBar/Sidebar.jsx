@@ -11,6 +11,7 @@ const Sidebar = ({ isOpen, labels = [], onEditLabels }) => {
 
   const isExpanded = isOpen || isHovered;
   const pathname = usePathname();
+
   const renderSidebarItem = (id, icon, label, path, onClick = null) => {
     const itemContent = (
       <>
@@ -76,7 +77,7 @@ const Sidebar = ({ isOpen, labels = [], onEditLabels }) => {
           (item) =>
             renderSidebarItem(
               item.id,
-              iconMap[item.icon],
+              iconMap[item.iconKey],
               item.label,
               item.path,
             ),
@@ -95,7 +96,7 @@ const Sidebar = ({ isOpen, labels = [], onEditLabels }) => {
           (item) =>
             renderSidebarItem(
               item.id,
-              iconMap[item.icon],
+              iconMap[item.iconKey],
               item.label,
               null,
               onEditLabels,

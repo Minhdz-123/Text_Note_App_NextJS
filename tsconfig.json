@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-, "app/page.jsx", "src/hooks/useLocalStorage.js", "src/hooks/useLocalStorage.tsx"  ],
+, "app/page.jsx", "src/hooks/useLocalStorage.js", "src/hooks/useLocalStorage.tsx", "src/components/AppBar/Sidebar.jsx", "app/ClientLayout.jsx"  ],
   "exclude": ["node_modules"]
 }

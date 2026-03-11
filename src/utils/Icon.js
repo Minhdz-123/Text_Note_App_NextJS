@@ -21,6 +21,9 @@ import {
   faPlus,
   faCheck,
   faTags,
+  faPalette,
+  faEllipsisVertical,
+  faBoxArchive,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const iconMap = {
@@ -45,4 +48,10 @@ export const iconMap = {
   list: faSquareCheck,
   paintbrush: faPaintBrush,
   picture: faImage,
+
+  //Note_button_icon
+  palette: faPalette,
+  storage : faBoxArchive,
+
+ellipsis_vertical:faEllipsisVertical,
 };

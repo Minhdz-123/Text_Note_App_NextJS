@@ -1,35 +1,21 @@
 "use client";
-import { useEffect } from "react";
-import { NAVBAR_ACTIONS, SETTING_LIST_ACTION } from "@/src/utils/Constants";
+import { NAVBAR_ACTIONS } from "@/src/utils/Constants";
+import { buildDropdownOptions } from "@/src/utils/buildDropdownOptions";
 import { iconMap } from "../../utils/Icon";
 import IconButton from "../Commons/IconButton";
 import Dropdown from "@/src/components/Commons/Dropdown";
-import useLocalStorage from "../../hooks/useLocalStorage";
+import useDarkMode from "@/src/hooks/useDarkMode";
 import TextInput from "../Commons/TextInput";
 import { useSearch } from "@/src/context/SearchContext";
 
 const Navbar = ({ onToggleSidebar, onOpenShortcutModal }) => {
-  const [isDark, setIsDark] = useLocalStorage("dark_mode", false);
-  useEffect(() => {
-    if (isDark) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [isDark]);
-  const handleToggleDarkMode = () => {
-    setIsDark(!isDark);
-  };
+  const { toggleDark } = useDarkMode();
   const { setSearchTerm } = useSearch();
-  const dropdownOptions = SETTING_LIST_ACTION.map((item) => ({
-    ...item,
-    label: item.title,
-    onClick: () => {
-      if (item.action === "dark_mode") handleToggleDarkMode();
-      else if (item.action === "shortcut") onOpenShortcutModal();
-      else console.log(item.action);
-    },
-  }));
+
+  const actionHandlers = {
+    dark_mode: toggleDark,
+    shortcut: onOpenShortcutModal,
+  };
 
   return (
     <nav className="fixed top-0 w-full h-16 bg-white dark:bg-[#202124] border-b border-gray-200 dark:border-[#5f6368] flex items-center px-4 justify-between z-1000 transition-colors">
@@ -70,11 +56,11 @@ const Navbar = ({ onToggleSidebar, onOpenShortcutModal }) => {
 
       <div className="flex items-center space-x-2">
         {NAVBAR_ACTIONS.map((item) => {
-          if (item.action === "settings") {
+          if (item.action === "open_dropdown" && item.dropdownKey) {
             return (
               <Dropdown
                 key={item.id}
-                options={dropdownOptions}
+                options={buildDropdownOptions(item.dropdownKey, actionHandlers)}
                 trigger={
                   <IconButton icon={iconMap[item.iconKey]} title={item.title} />
                 }
@@ -90,12 +76,6 @@ const Navbar = ({ onToggleSidebar, onOpenShortcutModal }) => {
             />
           );
         })}
-
-        <div className="ml-4 pl-4 border-l border-gray-200 dark:border-[#5f6368]">
-          <button className="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center text-sm font-medium hover:shadow-inner">
-            B
-          </button>
-        </div>
       </div>
     </nav>
   );

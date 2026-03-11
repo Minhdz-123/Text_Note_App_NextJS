@@ -1,26 +1,22 @@
 "use client";
+
 import { useMemo, useState } from "react";
 import useNotes from "@/src/hooks/useNotes";
-import NoteBox from "@/src/components/Commons/NoteBox";
 import NoteCard from "@/src/components/Commons/NoteCard";
 import { useSearch } from "@/src/context/SearchContext";
+import { ARCHIVE_CARD_BUTTON } from "@/src/utils/Constants";
 import EditNoteModal from "@/src/components/Modals/EditNoteModal";
 
-export default function HomePage() {
-  const { notes, addNote, archiveNote, editNote } = useNotes();
+export default function ArchivePage() {
+  const { archived, restoreNote, editNote } = useNotes();
   const { searchTerm } = useSearch();
 
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState(null);
 
-  const handleAdd = (newNoteContent) => {
-    addNote(newNoteContent);
-  };
-
   const handleAction = (action, note) => {
-    if (action === "move_to_storage") {
-      archiveNote(note.id);
-     
+    if (action === "restore") {
+      restoreNote(note.id);
     }
     if (action === "edit_note") {
       setNoteToEdit(note);
@@ -28,23 +24,27 @@ export default function HomePage() {
     }
   };
 
-  const filteredNotes = useMemo(() => {
-    return notes.filter((note) => {
+  const filtered = useMemo(() => {
+    return archived.filter((note) => {
       const term = searchTerm.toLowerCase();
       return (
         (note.title && note.title.toLowerCase().includes(term)) ||
         (note.content && note.content.toLowerCase().includes(term))
       );
     });
-  }, [notes, searchTerm]);
+  }, [archived, searchTerm]);
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen p-4">
-      <NoteBox onAddNote={handleAdd} />
-
+      <h1 className="text-2xl font-semibold mb-6">Lưu trữ</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full max-w-300 mt-8">
-        {filteredNotes.map((note) => (
-          <NoteCard key={note.id} note={note} onAction={handleAction} />
+        {filtered.map((note) => (
+          <NoteCard
+            key={note.id}
+            note={note}
+            onAction={handleAction}
+            buttons={ARCHIVE_CARD_BUTTON}
+          />
         ))}
       </div>
 
