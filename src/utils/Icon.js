@@ -49,9 +49,8 @@ export const iconMap = {
   paintbrush: faPaintBrush,
   picture: faImage,
 
-  //Note_button_icon
+  // Note card button icons
   palette: faPalette,
-  storage : faBoxArchive,
-
-ellipsis_vertical:faEllipsisVertical,
+  storage: faBoxArchive,
+  ellipsis_vertical: faEllipsisVertical,
 };

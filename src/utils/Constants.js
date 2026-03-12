@@ -91,12 +91,36 @@ export const NOTE_CARD_BUTTON = [
 export const ARCHIVE_CARD_BUTTON = [
   { id: 0, title: "Sửa", iconKey: "pen", action: "edit_note" },
   { id: 1, title: "Khôi phục", iconKey: "refresh", action: "restore" },
+  {
+    id: 2,
+    title: "Tùy chọn khác",
+    iconKey: "ellipsis_vertical",
+    action: "more_option",
+  },
 ];
 
+export const TRASH_CARD_BUTTON = [
+  { id: 0, title: "Khôi phục", iconKey: "refresh", action: "restore_from_trash" },
+  { id: 1, title: "Xóa vĩnh viễn", iconKey: "trash", action: "delete_permanently" },
+];
+
+export const MORE_OPTION_MENU = [
+  { id: 1, label: "Xóa ghi chú", action: "move_to_trash" },
+];
+export const COLOR_PALETTE = [
+  { id: 1, name: "Trắng", colorClass: "bg-white" },
+  { id: 2, name: "Đỏ", colorClass: "bg-red-300" },
+  { id: 4, name: "Vàng", colorClass: "bg-yellow-200" },
+  { id: 5, name: "Xanh lá", colorClass: "bg-green-100" },
+  { id: 6, name: "Xanh dương", colorClass: "bg-cyan-100" },
+  { id: 7, name: "Tím", colorClass: "bg-blue-100" },
+];
 validateIcon(iconMap, [
   SIDEBAR_MENU,
   NAVBAR_ACTIONS,
   NOTE_BOX_BUTTON,
   NOTE_CARD_BUTTON,
   ARCHIVE_CARD_BUTTON,
+  TRASH_CARD_BUTTON,
 ]);
+

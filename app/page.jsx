@@ -7,7 +7,7 @@ import { useSearch } from "@/src/context/SearchContext";
 import EditNoteModal from "@/src/components/Modals/EditNoteModal";
 
 export default function HomePage() {
-  const { notes, addNote, archiveNote, editNote } = useNotes();
+  const { notes, addNote, archiveNote, editNote, moveToTrash, changeNoteColor } = useNotes();
   const { searchTerm } = useSearch();
 
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -20,7 +20,9 @@ export default function HomePage() {
   const handleAction = (action, note) => {
     if (action === "move_to_storage") {
       archiveNote(note.id);
-     
+    }
+    if (action === "move_to_trash") {
+      moveToTrash(note.id);
     }
     if (action === "edit_note") {
       setNoteToEdit(note);
@@ -44,7 +46,12 @@ export default function HomePage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full max-w-300 mt-8">
         {filteredNotes.map((note) => (
-          <NoteCard key={note.id} note={note} onAction={handleAction} />
+          <NoteCard 
+            key={note.id} 
+            note={note} 
+            onAction={handleAction}
+            onColorChange={changeNoteColor}
+          />
         ))}
       </div>
 
@@ -61,3 +68,4 @@ export default function HomePage() {
     </div>
   );
 }
+

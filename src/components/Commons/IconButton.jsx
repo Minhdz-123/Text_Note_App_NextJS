@@ -4,6 +4,10 @@ import { useState } from "react";
 const IconButton = ({ icon, title, onClick, className = "", size = "w-10 h-10", textClass = "text-xl" }) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
+  if (!icon) {
+    console.warn("IconButton rendered without icon", title);
+  }
+
   return (
     <div className="relative flex items-center justify-center">
       <button
@@ -12,7 +16,7 @@ const IconButton = ({ icon, title, onClick, className = "", size = "w-10 h-10", 
         onMouseLeave={() => setShowTooltip(false)}
         className={`${size} rounded-full flex items-center justify-center hover:bg-gray-200/50 dark:hover:bg-[#3c3c3c] text-[#5f6368] dark:text-[#9aa0a6] transition-colors duration-200 outline-none ${className}`}
       >
-        <FontAwesomeIcon icon={icon} className={textClass} />
+        {icon ? <FontAwesomeIcon icon={icon} className={textClass} /> : null}
       </button>
 
       {showTooltip && title && (

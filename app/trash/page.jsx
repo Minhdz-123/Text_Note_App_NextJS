@@ -1,7 +1,50 @@
-import React from "react";
+"use client";
 
-function page() {
-  return <div>page</div>;
+import { useMemo, useState } from "react";
+import useNotes from "@/src/hooks/useNotes";
+import NoteCard from "@/src/components/Commons/NoteCard";
+import { useSearch } from "@/src/context/SearchContext";
+import { TRASH_CARD_BUTTON } from "@/src/utils/Constants";
+
+export default function TrashPage() {
+  const { trash, restoreFromTrash, deleteNote, changeNoteColor } = useNotes();
+  const { searchTerm } = useSearch();
+
+  const handleAction = (action, note) => {
+    if (action === "restore_from_trash") {
+      restoreFromTrash(note.id);
+    } else if (action === "delete_permanently") {
+      deleteNote(note.id);
+    }
+  };
+
+  const filtered = useMemo(() => {
+    return trash.filter((note) => {
+      const term = searchTerm.toLowerCase();
+      return (
+        (note.title && note.title.toLowerCase().includes(term)) ||
+        (note.content && note.content.toLowerCase().includes(term))
+      );
+    });
+  }, [trash, searchTerm]);
+
+  return (
+    <div className="flex flex-col items-center w-full min-h-screen p-4">
+      <h1 className="text-2xl font-semibold mb-6">Thùng rác</h1>
+      
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full max-w-300 mt-8">
+          {filtered.map((note) => (
+            <NoteCard
+              key={note.id}
+              note={note}
+              onAction={handleAction}
+              onColorChange={changeNoteColor}
+              buttons={TRASH_CARD_BUTTON}
+            />
+          ))}
+        </div>
+      
+    </div>
+  );
 }
 
-export default page;
