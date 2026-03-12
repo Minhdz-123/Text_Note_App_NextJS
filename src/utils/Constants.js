@@ -1,5 +1,6 @@
 import { validateIcon } from "@/src/hooks/validateIcon";
 import { iconMap } from "./Icon";
+import { type } from "os";
 
 export const SIDEBAR_MENU = [
   { id: 1, label: "Ghi chú", path: "/", iconKey: "lightbulb" },
@@ -75,13 +76,19 @@ export const NOTE_CARD_BUTTON = [
   { id: 0, title: "Sửa", iconKey: "pen", action: "edit_note" },
   {
     id: 1,
+    title: "Các tùy chọn định dạng",
+    iconKey: "font",
+    action: "choose_format",
+  },
+  {
+    id: 2,
     title: "Lựa chọn nền",
     iconKey: "palette",
     action: "choose_background",
   },
-  { id: 2, title: "Lưu trữ", iconKey: "storage", action: "move_to_storage" },
+  { id: 3, title: "Lưu trữ", iconKey: "storage", action: "move_to_storage" },
   {
-    id: 3,
+    id: 4,
     title: "Tùy chọn khác",
     iconKey: "ellipsis_vertical",
     action: "more_option",
@@ -100,8 +107,18 @@ export const ARCHIVE_CARD_BUTTON = [
 ];
 
 export const TRASH_CARD_BUTTON = [
-  { id: 0, title: "Khôi phục", iconKey: "refresh", action: "restore_from_trash" },
-  { id: 1, title: "Xóa vĩnh viễn", iconKey: "trash", action: "delete_permanently" },
+  {
+    id: 0,
+    title: "Khôi phục",
+    iconKey: "refresh",
+    action: "restore_from_trash",
+  },
+  {
+    id: 1,
+    title: "Xóa vĩnh viễn",
+    iconKey: "trash",
+    action: "delete_permanently",
+  },
 ];
 
 export const MORE_OPTION_MENU = [
@@ -115,6 +132,40 @@ export const COLOR_PALETTE = [
   { id: 6, name: "Xanh dương", colorClass: "bg-cyan-100" },
   { id: 7, name: "Tím", colorClass: "bg-blue-100" },
 ];
+export const FONT_TYPES = [
+  { id: 1, name: "Tiêu đề 1", type: "h1", iconKey: "heading1", display: { label: "H1", style: "font-bold" } },
+  { id: 2, name: "Tiêu đề 2", type: "h2", iconKey: "heading2", display: { label: "H2", style: "font-bold" } },
+  { id: 3, name: "Bình thường", type: "p", iconKey: "text", display: { label: "Aa" } },
+  { id: 4, name: "In đậm", type: "strong", iconKey: "bold", display: { label: "B", style: "font-bold" } },
+  { id: 5, name: "In nghiêng", type: "em", iconKey: "italic", display: { label: "I", style: "italic" } },
+  { id: 6, name: "Gạch dưới", type: "u", iconKey: "underline", display: { label: "U", style: "underline" } },
+  { id: 7, name: "Xóa định dạng", type: "default", iconKey: "clearFormat", display: { useIcon: true } },
+];
+
+export const FORMAT_CONFIG = {
+  h1: { tag: "h1", classes: "text-2xl font-bold" },
+  h2: { tag: "h2", classes: "text-xl font-bold" },
+  p: { tag: "p", classes: "" },
+  strong: { tag: null, classes: "font-bold" },
+  em: { tag: null, classes: "italic" },
+  u: { tag: null, classes: "underline" },
+};
+
+export const HEADING_TYPES = Object.keys(FORMAT_CONFIG)
+  .filter(key => FORMAT_CONFIG[key].tag !== null)
+  .filter(key => ["h1", "h2", "p"].includes(key));
+
+export const STORAGE_KEYS = {
+  NOTES: "my_notes_list",
+  ARCHIVED: "archived_notes",
+  TRASH: "trash_notes",
+};
+
+export const NOTE_PROPERTIES = {
+  FORMATS: "formats",
+  COLOR_CLASS: "colorClass",
+};
+
 validateIcon(iconMap, [
   SIDEBAR_MENU,
   NAVBAR_ACTIONS,
@@ -122,5 +173,5 @@ validateIcon(iconMap, [
   NOTE_CARD_BUTTON,
   ARCHIVE_CARD_BUTTON,
   TRASH_CARD_BUTTON,
+  FONT_TYPES,
 ]);
-

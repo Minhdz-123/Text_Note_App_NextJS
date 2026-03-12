@@ -16,7 +16,13 @@ const EditNoteModal = ({ isOpen, onClose, note, onSave }) => {
   };
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose} title="" className="w-96" showFooter={false}>
+    <BaseModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title=""
+      className="w-96"
+      showFooter={false}
+    >
       <div className="flex flex-col gap-3">
         {note?.id && (
           <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">

@@ -8,7 +8,7 @@ import { ARCHIVE_CARD_BUTTON } from "@/src/utils/Constants";
 import EditNoteModal from "@/src/components/Modals/EditNoteModal";
 
 export default function ArchivePage() {
-  const { archived, restoreNote, editNote, moveToTrash, changeNoteColor } = useNotes();
+  const { archived, restoreNote, editNote, moveToTrash, changeNoteColor, changeNoteFormat } = useNotes();
   const { searchTerm } = useSearch();
 
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -47,6 +47,7 @@ export default function ArchivePage() {
             note={note}
             onAction={handleAction}
             onColorChange={changeNoteColor}
+            onFormatChange={changeNoteFormat}
             buttons={ARCHIVE_CARD_BUTTON}
           />
         ))}

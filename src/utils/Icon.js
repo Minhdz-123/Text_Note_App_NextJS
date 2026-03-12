@@ -24,6 +24,12 @@ import {
   faPalette,
   faEllipsisVertical,
   faBoxArchive,
+  faFont,
+  faBold,
+  faItalic,
+  faUnderline,
+  faHeading,
+  faEraser,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const iconMap = {
@@ -53,4 +59,14 @@ export const iconMap = {
   palette: faPalette,
   storage: faBoxArchive,
   ellipsis_vertical: faEllipsisVertical,
+  font: faFont,
+
+  // Text formatting icons
+  heading1: faHeading,
+  heading2: faHeading,
+  text: faFont,
+  bold: faBold,
+  italic: faItalic,
+  underline: faUnderline,
+  clearFormat: faEraser,
 };

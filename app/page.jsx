@@ -7,7 +7,7 @@ import { useSearch } from "@/src/context/SearchContext";
 import EditNoteModal from "@/src/components/Modals/EditNoteModal";
 
 export default function HomePage() {
-  const { notes, addNote, archiveNote, editNote, moveToTrash, changeNoteColor } = useNotes();
+  const { notes, addNote, archiveNote, editNote, moveToTrash, changeNoteColor, changeNoteFormat } = useNotes();
   const { searchTerm } = useSearch();
 
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -51,6 +51,7 @@ export default function HomePage() {
             note={note} 
             onAction={handleAction}
             onColorChange={changeNoteColor}
+            onFormatChange={changeNoteFormat}
           />
         ))}
       </div>

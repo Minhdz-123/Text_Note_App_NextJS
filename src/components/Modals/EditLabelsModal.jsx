@@ -32,9 +32,7 @@ const EditLabelsModal = ({ isOpen, onClose, labels, setLabels }) => {
   };
 
   return (
-
     <BaseModal isOpen={isOpen} onClose={onClose} title={EDIT_LABELS_TEXT.TITLE}>
-
       <div className="flex items-center h-10 mb-2 group px-1">
         <IconButton
           icon={newLabelName ? iconMap.close : iconMap.plus}
@@ -62,7 +60,9 @@ const EditLabelsModal = ({ isOpen, onClose, labels, setLabels }) => {
           size="w-8 h-8"
           textClass="text-[14px]"
           title="Tạo nhãn"
-          className={newLabelName ? "opacity-100" : "opacity-0 pointer-events-none"}
+          className={
+            newLabelName ? "opacity-100" : "opacity-0 pointer-events-none"
+          }
         />
       </div>
 
@@ -94,11 +94,13 @@ const EditLabelsModal = ({ isOpen, onClose, labels, setLabels }) => {
               size="w-8 h-8"
               textClass="text-[14px]"
               title={
-                (editingId === label.id || hoveredId === label.id) ? EDIT_LABELS_TEXT.TOOLTIP_DELETE : ""
+                editingId === label.id || hoveredId === label.id
+                  ? EDIT_LABELS_TEXT.TOOLTIP_DELETE
+                  : ""
               }
             />
             <input
-              className={`flex-1 h-8 bg-transparent border-none outline-none px-3 py-1 text-sm border-b focus:border-gray-300 dark:focus:border-[#5f6368] dark:text-[#e8eaed] transition-colors ${editingId === label.id ? 'border-gray-300 dark:border-[#5f6368]' : 'border-transparent group-hover:border-gray-300 dark:group-hover:border-[#5f6368]'}`}
+              className={`flex-1 h-8 bg-transparent border-none outline-none px-3 py-1 text-sm border-b focus:border-gray-300 dark:focus:border-[#5f6368] dark:text-[#e8eaed] transition-colors ${editingId === label.id ? "border-gray-300 dark:border-[#5f6368]" : "border-transparent group-hover:border-gray-300 dark:group-hover:border-[#5f6368]"}`}
               value={editingId === label.id ? editValue : label.name}
               onFocus={() => {
                 setEditingId(label.id);
@@ -122,7 +124,11 @@ const EditLabelsModal = ({ isOpen, onClose, labels, setLabels }) => {
               title={
                 editingId === label.id ? "Lưu" : EDIT_LABELS_TEXT.TOOLTIP_RENAME
               }
-              className={(editingId === label.id || hoveredId === label.id) ? "opacity-100" : "opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity"}
+              className={
+                editingId === label.id || hoveredId === label.id
+                  ? "opacity-100"
+                  : "opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity"
+              }
             />
           </div>
         ))}

@@ -7,7 +7,7 @@ import { useSearch } from "@/src/context/SearchContext";
 import { TRASH_CARD_BUTTON } from "@/src/utils/Constants";
 
 export default function TrashPage() {
-  const { trash, restoreFromTrash, deleteNote, changeNoteColor } = useNotes();
+  const { trash, restoreFromTrash, deleteNote, changeNoteColor, changeNoteFormat } = useNotes();
   const { searchTerm } = useSearch();
 
   const handleAction = (action, note) => {
@@ -39,6 +39,7 @@ export default function TrashPage() {
               note={note}
               onAction={handleAction}
               onColorChange={changeNoteColor}
+              onFormatChange={changeNoteFormat}
               buttons={TRASH_CARD_BUTTON}
             />
           ))}
