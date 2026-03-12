@@ -10,14 +10,14 @@ export function validateIcon(iconMap, configs) {
       usedIcons.add(key);
 
       if (!iconMap[key]) {
-        console.error(`❌ Icon "${key}" chưa được mapping trong iconMap`);
+        console.error(`"${key}" chưa được mapping trong iconMap`);
       }
     });
   });
   Object.keys(iconMap).forEach((key) => {
     if (!usedIcons.has(key)) {
       console.warn(
-        `⚠️ Icon "${key}" tồn tại trong iconMap nhưng không được sử dụng`,
+        ` "${key}" tồn tại trong iconMap nhưng không được sử dụng`,
       );
     }
   });

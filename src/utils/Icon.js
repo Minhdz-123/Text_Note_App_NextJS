@@ -24,6 +24,12 @@ import {
   faPalette,
   faEllipsisVertical,
   faBoxArchive,
+  faFont,
+  faBold,
+  faItalic,
+  faUnderline,
+  faHeading,
+  faEraser,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const iconMap = {
@@ -49,9 +55,18 @@ export const iconMap = {
   paintbrush: faPaintBrush,
   picture: faImage,
 
-  //Note_button_icon
+  // Note card button icons
   palette: faPalette,
-  storage : faBoxArchive,
+  storage: faBoxArchive,
+  ellipsis_vertical: faEllipsisVertical,
+  font: faFont,
 
-ellipsis_vertical:faEllipsisVertical,
+  // Text formatting icons
+  heading1: faHeading,
+  heading2: faHeading,
+  text: faFont,
+  bold: faBold,
+  italic: faItalic,
+  underline: faUnderline,
+  clearFormat: faEraser,
 };
