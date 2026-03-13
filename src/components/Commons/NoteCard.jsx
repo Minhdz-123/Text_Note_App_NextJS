@@ -10,6 +10,7 @@ import IconButton from "./IconButton";
 import Dropdown from "./Dropdown";
 import ColorPicker from "./ColorPicker";
 import TextFormatPicker from "./TextFormatPicker";
+import LabelSelectionDropdown from "./LabelSelectionDropdown";
 import { iconMap } from "@/src/utils/Icon";
 
 const NoteCard = ({
@@ -17,10 +18,12 @@ const NoteCard = ({
   onAction,
   onColorChange,
   onFormatChange,
+  labels = [],
   buttons = NOTE_CARD_BUTTON,
 }) => {
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showFormatPicker, setShowFormatPicker] = useState(false);
+  const [showLabelSelection, setShowLabelSelection] = useState(false);
   const dropdownRef = useRef(null);
 
   const handleCardClick = () => {
@@ -39,7 +42,11 @@ const NoteCard = ({
   };
 
   const handleMoreOptionClick = (action) => {
-    if (onAction) onAction(action, note);
+    if (action === "add_labels") {
+      setShowLabelSelection(true);
+    } else {
+      if (onAction) onAction(action, note);
+    }
   };
 
   const handleColorSelect = (color) => {
@@ -94,8 +101,38 @@ const NoteCard = ({
         >
           {note.content}
         </ContentTag>
+        {(note[NOTE_PROPERTIES.LABELS] || []).length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-3">
+            {(note[NOTE_PROPERTIES.LABELS] || []).map((labelId) => {
+              const label = labels.find((l) => l.id === labelId);
+              return label ? (
+                <span
+                  key={labelId}
+                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 dark:bg-[#5f6368] text-[#202124] dark:text-[#e8eaed]"
+                >
+                  {label.name}
+                </span>
+              ) : null;
+            })}
+          </div>
+        )}
       </div>
       <div className="relative flex justify-center gap-1 px-2 py-2 border-t border-[#e0e0e0] dark:border-[#5f6368] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+        {showLabelSelection && (
+          <LabelSelectionDropdown
+            labels={labels}
+            noteLabels={note[NOTE_PROPERTIES.LABELS] || []}
+            onLabelToggle={(labelId) => {
+              if ((note[NOTE_PROPERTIES.LABELS] || []).includes(labelId)) {
+                onAction?.("remove_label", note, labelId);
+              } else {
+                onAction?.("add_label", note, labelId);
+              }
+              setShowLabelSelection(false);
+            }}
+            onClose={() => setShowLabelSelection(false)}
+          />
+        )}
         {buttons.map((item) => {
           if (item.action === "choose_format") {
             return (
