@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import useNotes from "./useNotes";
 
-export default function useNoteUI() {
+export default function useNoteUI(actions = {}) {
   const {
     archiveNote,
     restoreNote,
@@ -12,7 +11,7 @@ export default function useNoteUI() {
     removeLabelFromNote,
     restoreFromTrash,
     deleteNote,
-  } = useNotes();
+  } = actions;
 
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState(null);

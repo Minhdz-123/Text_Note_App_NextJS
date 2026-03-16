@@ -10,11 +10,12 @@ import { usePageTitle } from "@/src/context/PageTitleContext";
 import useNoteUI from "@/src/hooks/useNoteUI";
 
 export default function TrashPage() {
-  const { trash, changeNoteColor, changeNoteFormat } = useNotes();
+  const noteActions = useNotes();
+  const { trash, changeNoteColor, changeNoteFormat } = noteActions;
   const { searchTerm } = useSearch();
   const [labels] = useLocalStorage("keep_labels", []);
   const { setPageTitle } = usePageTitle();
-  const { handleAction } = useNoteUI();
+  const { handleAction } = useNoteUI(noteActions);
 
   useEffect(() => {
     setPageTitle("Thùng rác");

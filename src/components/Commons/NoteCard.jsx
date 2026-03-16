@@ -92,12 +92,12 @@ const NoteCard = ({
     >
       <div className="flex-1 p-4">
         {note.title && (
-          <h4 className="font-semibold text-[#202124] dark:text-[#e8eaed] mb-1 break-words break-all">
+          <h4 className="font-semibold text-[#202124] dark:text-[#e8eaed] mb-1 wrap-break-word break-all">
             {note.title}
           </h4>
         )}
         <ContentTag
-          className={`text-[#202124] dark:text-[#e8eaed] whitespace-pre-wrap break-words break-all${classes ? " " + classes : ""}`}
+          className={`text-[#202124] dark:text-[#e8eaed] whitespace-pre-wrap wrap-break-word break-all${classes ? " " + classes : ""}`}
         >
           {note.content}
         </ContentTag>
@@ -119,19 +119,23 @@ const NoteCard = ({
       </div>
       <div className="relative flex justify-center gap-1 px-2 py-2 border-t border-[#e0e0e0] dark:border-[#5f6368] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         {showLabelSelection && (
-          <LabelSelectionDropdown
-            labels={labels}
-            noteLabels={note[NOTE_PROPERTIES.LABELS] || []}
-            onLabelToggle={(labelId) => {
-              if ((note[NOTE_PROPERTIES.LABELS] || []).includes(labelId)) {
-                onAction?.("remove_label", note, labelId);
-              } else {
-                onAction?.("add_label", note, labelId);
-              }
-              setShowLabelSelection(false);
-            }}
-            onClose={() => setShowLabelSelection(false)}
-          />
+          <div
+            className="absolute right-0 bottom-full mb-1 z-50"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <LabelSelectionDropdown
+              labels={labels}
+              noteLabels={note[NOTE_PROPERTIES.LABELS] || []}
+              onLabelToggle={(labelId) => {
+                if ((note[NOTE_PROPERTIES.LABELS] || []).includes(labelId)) {
+                  onAction?.("remove_label", note, labelId);
+                } else {
+                  onAction?.("add_label", note, labelId);
+                }
+              }}
+              onClose={() => setShowLabelSelection(false)}
+            />
+          </div>
         )}
         {buttons.map((item) => {
           if (item.action === "choose_format") {
