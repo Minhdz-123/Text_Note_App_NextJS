@@ -1,6 +1,5 @@
 import { validateIcon } from "@/src/hooks/validateIcon";
 import { iconMap } from "./Icon";
-import { type } from "os";
 
 export const SIDEBAR_MENU = [
   { id: 1, label: "Ghi chú", path: "/", iconKey: "lightbulb" },
@@ -122,7 +121,8 @@ export const TRASH_CARD_BUTTON = [
 ];
 
 export const MORE_OPTION_MENU = [
-  { id: 1, label: "Xóa ghi chú", action: "move_to_trash" },
+  { id: 1, label: "Thêm nhãn", action: "add_labels" },
+  { id: 2, label: "Xóa ghi chú", action: "move_to_trash" },
 ];
 export const COLOR_PALETTE = [
   { id: 1, name: "Trắng", colorClass: "bg-white" },
@@ -133,13 +133,55 @@ export const COLOR_PALETTE = [
   { id: 7, name: "Tím", colorClass: "bg-blue-100" },
 ];
 export const FONT_TYPES = [
-  { id: 1, name: "Tiêu đề 1", type: "h1", iconKey: "heading1", display: { label: "H1", style: "font-bold" } },
-  { id: 2, name: "Tiêu đề 2", type: "h2", iconKey: "heading2", display: { label: "H2", style: "font-bold" } },
-  { id: 3, name: "Bình thường", type: "p", iconKey: "text", display: { label: "Aa" } },
-  { id: 4, name: "In đậm", type: "strong", iconKey: "bold", display: { label: "B", style: "font-bold" } },
-  { id: 5, name: "In nghiêng", type: "em", iconKey: "italic", display: { label: "I", style: "italic" } },
-  { id: 6, name: "Gạch dưới", type: "u", iconKey: "underline", display: { label: "U", style: "underline" } },
-  { id: 7, name: "Xóa định dạng", type: "default", iconKey: "clearFormat", display: { useIcon: true } },
+  {
+    id: 1,
+    name: "Tiêu đề 1",
+    type: "h1",
+    iconKey: "heading1",
+    display: { label: "H1", style: "font-bold" },
+  },
+  {
+    id: 2,
+    name: "Tiêu đề 2",
+    type: "h2",
+    iconKey: "heading2",
+    display: { label: "H2", style: "font-bold" },
+  },
+  {
+    id: 3,
+    name: "Bình thường",
+    type: "p",
+    iconKey: "text",
+    display: { label: "Aa" },
+  },
+  {
+    id: 4,
+    name: "In đậm",
+    type: "strong",
+    iconKey: "bold",
+    display: { label: "B", style: "font-bold" },
+  },
+  {
+    id: 5,
+    name: "In nghiêng",
+    type: "em",
+    iconKey: "italic",
+    display: { label: "I", style: "italic" },
+  },
+  {
+    id: 6,
+    name: "Gạch dưới",
+    type: "u",
+    iconKey: "underline",
+    display: { label: "U", style: "underline" },
+  },
+  {
+    id: 7,
+    name: "Xóa định dạng",
+    type: "default",
+    iconKey: "clearFormat",
+    display: { useIcon: true },
+  },
 ];
 
 export const FORMAT_CONFIG = {
@@ -152,8 +194,8 @@ export const FORMAT_CONFIG = {
 };
 
 export const HEADING_TYPES = Object.keys(FORMAT_CONFIG)
-  .filter(key => FORMAT_CONFIG[key].tag !== null)
-  .filter(key => ["h1", "h2", "p"].includes(key));
+  .filter((key) => FORMAT_CONFIG[key].tag !== null)
+  .filter((key) => ["h1", "h2", "p"].includes(key));
 
 export const STORAGE_KEYS = {
   NOTES: "my_notes_list",
@@ -164,6 +206,7 @@ export const STORAGE_KEYS = {
 export const NOTE_PROPERTIES = {
   FORMATS: "formats",
   COLOR_CLASS: "colorClass",
+  LABELS: "labels",
 };
 
 validateIcon(iconMap, [

@@ -28,7 +28,8 @@ function Dropdown({ options = [], trigger, width = "225px" }) {
           {options.map((option, index) => (
             <div
               key={index}
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 option.onClick?.();
                 setOpen(false);
               }}

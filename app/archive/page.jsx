@@ -6,15 +6,17 @@ import NoteCard from "@/src/components/Commons/NoteCard";
 import { useSearch } from "@/src/context/SearchContext";
 import { ARCHIVE_CARD_BUTTON } from "@/src/utils/Constants";
 import EditNoteModal from "@/src/components/Modals/EditNoteModal";
+import useLocalStorage from "@/src/hooks/useLocalStorage";
 
 export default function ArchivePage() {
-  const { archived, restoreNote, editNote, moveToTrash, changeNoteColor, changeNoteFormat } = useNotes();
+  const { archived, restoreNote, editNote, moveToTrash, changeNoteColor, changeNoteFormat, addLabelToNote, removeLabelFromNote } = useNotes();
   const { searchTerm } = useSearch();
+  const [labels] = useLocalStorage("keep_labels", []);
 
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState(null);
 
-  const handleAction = (action, note) => {
+  const handleAction = (action, note, labelId = null) => {
     if (action === "restore") {
       restoreNote(note.id);
     }
@@ -24,6 +26,12 @@ export default function ArchivePage() {
     if (action === "edit_note") {
       setNoteToEdit(note);
       setEditModalOpen(true);
+    }
+    if (action === "add_label") {
+      addLabelToNote(note.id, labelId);
+    }
+    if (action === "remove_label") {
+      removeLabelFromNote(note.id, labelId);
     }
   };
 
@@ -49,6 +57,7 @@ export default function ArchivePage() {
             onColorChange={changeNoteColor}
             onFormatChange={changeNoteFormat}
             buttons={ARCHIVE_CARD_BUTTON}
+            labels={labels}
           />
         ))}
       </div>

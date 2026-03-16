@@ -27,6 +27,10 @@ const EditLabelsModal = ({ isOpen, onClose, labels, setLabels }) => {
   const handleUpdateLabel = (id) => {
     const trimmed = editValue.trim();
     if (!trimmed) return;
+    if(labels.find((l) => l.name === trimmed && l.id !== id)) {
+      setError(EDIT_LABELS_TEXT.ERROR_ALREADY_EXISTS);
+      return;
+    }
     setLabels(labels.map((l) => (l.id === id ? { ...l, name: trimmed } : l)));
     setEditingId(null);
   };

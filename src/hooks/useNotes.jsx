@@ -142,6 +142,60 @@ export default function useNotes() {
     setTrash(trash.filter((n) => n.id !== noteId));
   };
 
+  const addLabelToNote = (noteId, labelId) => {
+    const updateNoteLabels = (note) => {
+      const labels = note[NOTE_PROPERTIES.LABELS] || [];
+      if (!labels.includes(labelId)) {
+        return { ...note, [NOTE_PROPERTIES.LABELS]: [...labels, labelId] };
+      }
+      return note;
+    };
+
+    const noteInNotes = notes.find((n) => n.id === noteId);
+    const noteInArchived = archived.find((n) => n.id === noteId);
+    const noteInTrash = trash.find((n) => n.id === noteId);
+
+    if (noteInNotes) {
+      setNotes(notes.map((n) => (n.id === noteId ? updateNoteLabels(n) : n)));
+    } else if (noteInArchived) {
+      setArchived(
+        archived.map((n) => (n.id === noteId ? updateNoteLabels(n) : n))
+      );
+    } else if (noteInTrash) {
+      setTrash(trash.map((n) => (n.id === noteId ? updateNoteLabels(n) : n)));
+    }
+  };
+
+  const removeLabelFromNote = (noteId, labelId) => {
+    const updateNoteLabels = (note) => {
+      const labels = note[NOTE_PROPERTIES.LABELS] || [];
+      return {
+        ...note,
+        [NOTE_PROPERTIES.LABELS]: labels.filter((l) => l !== labelId),
+      };
+    };
+
+    const noteInNotes = notes.find((n) => n.id === noteId);
+    const noteInArchived = archived.find((n) => n.id === noteId);
+    const noteInTrash = trash.find((n) => n.id === noteId);
+
+    if (noteInNotes) {
+      setNotes(notes.map((n) => (n.id === noteId ? updateNoteLabels(n) : n)));
+    } else if (noteInArchived) {
+      setArchived(
+        archived.map((n) => (n.id === noteId ? updateNoteLabels(n) : n))
+      );
+    } else if (noteInTrash) {
+      setTrash(trash.map((n) => (n.id === noteId ? updateNoteLabels(n) : n)));
+    }
+  };
+
+  const getNotesByLabel = (labelId) => {
+    return notes.filter((n) =>
+      (n[NOTE_PROPERTIES.LABELS] || []).includes(labelId)
+    );
+  };
+
   return {
     notes,
     archived,
@@ -155,5 +209,8 @@ export default function useNotes() {
     moveToTrash,
     restoreFromTrash,
     deleteNote,
+    addLabelToNote,
+    removeLabelFromNote,
+    getNotesByLabel,
   };
 }

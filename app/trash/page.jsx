@@ -1,14 +1,16 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import useNotes from "@/src/hooks/useNotes";
 import NoteCard from "@/src/components/Commons/NoteCard";
 import { useSearch } from "@/src/context/SearchContext";
 import { TRASH_CARD_BUTTON } from "@/src/utils/Constants";
+import useLocalStorage from "@/src/hooks/useLocalStorage";
 
 export default function TrashPage() {
   const { trash, restoreFromTrash, deleteNote, changeNoteColor, changeNoteFormat } = useNotes();
   const { searchTerm } = useSearch();
+  const [labels] = useLocalStorage("keep_labels", []);
 
   const handleAction = (action, note) => {
     if (action === "restore_from_trash") {
@@ -41,6 +43,7 @@ export default function TrashPage() {
               onColorChange={changeNoteColor}
               onFormatChange={changeNoteFormat}
               buttons={TRASH_CARD_BUTTON}
+              labels={labels}
             />
           ))}
         </div>
