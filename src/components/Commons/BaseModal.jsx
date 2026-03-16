@@ -3,7 +3,7 @@ const BaseModal = ({
   onClose,
   title,
   children,
-  className = "w-75s",
+  className = "w-80",
   showFooter = true,
   customHeader = null,
   bodyClassName = "p-4 pb-2",
@@ -12,8 +12,11 @@ const BaseModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-2000 flex items-center justify-center bg-black/50">
-      <div className={`${className} bg-white dark:bg-[#2d2e31] rounded-lg shadow-lg flex flex-col text-[#202124] dark:text-[#e8eaed]`}>
+    <div className="fixed inset-0 z-2000 flex items-center justify-center bg-black/50" onClick={onClose}>
+      <div 
+        className={`${className} bg-white dark:bg-[#2d2e31] rounded-lg shadow-lg flex flex-col text-[#202124] dark:text-[#e8eaed]`}
+        onClick={(e) => e.stopPropagation()}
+      >
 
         {customHeader && customHeader}
 

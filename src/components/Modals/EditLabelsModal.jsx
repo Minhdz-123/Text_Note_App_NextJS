@@ -1,15 +1,106 @@
+import { useRef, useState } from "react";
 import BaseModal from "../Commons/BaseModal";
 import IconButton from "../Commons/IconButton";
 import { iconMap } from "../../utils/Icon";
-import { useState } from "react";
 import { EDIT_LABELS_TEXT } from "@/src/utils/Constants";
+
+const LabelItem = ({ label, labels, setLabels }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState(label.name);
+  const inputRef = useRef(null);
+
+  const handleUpdate = () => {
+    const trimmed = editValue.trim();
+    if (!trimmed) {
+      setEditValue(label.name);
+      setIsEditing(false);
+      return;
+    }
+    if (labels.find((l) => l.name === trimmed && l.id !== label.id)) {
+      setEditValue(label.name);
+      setIsEditing(false);
+      return; 
+    }
+    setLabels(labels.map((l) => (l.id === label.id ? { ...l, name: trimmed } : l)));
+    setIsEditing(false);
+  };
+
+  const handleDelete = () => {
+    setLabels(labels.filter((l) => l.id !== label.id));
+  };
+
+  return (
+    <div className="flex items-center h-10 group px-1 transition-colors">
+      {!isEditing ? (
+        <>
+          <div className="flex group-hover:hidden">
+            <IconButton icon={iconMap.label} size="w-8 h-8" textClass="text-[14px]" />
+          </div>
+          <div className="hidden group-hover:flex">
+            <IconButton
+              icon={iconMap.trash}
+              onClick={handleDelete}
+              size="w-8 h-8"
+              textClass="text-[14px]"
+              title={EDIT_LABELS_TEXT.TOOLTIP_DELETE}
+            />
+          </div>
+        </>
+      ) : (
+        <div className="flex">
+          <IconButton
+            icon={iconMap.trash}
+            onClick={handleDelete}
+            size="w-8 h-8"
+            textClass="text-[14px]"
+            title={EDIT_LABELS_TEXT.TOOLTIP_DELETE}
+          />
+        </div>
+      )}
+
+      <input
+        ref={inputRef}
+        className={`flex-1 h-8 bg-transparent border-none outline-none px-3 py-1 text-sm border-b focus:border-gray-300 dark:focus:border-[#5f6368] dark:text-[#e8eaed] transition-colors ${
+          isEditing
+            ? "border-gray-300 dark:border-[#5f6368]"
+            : "border-transparent group-hover:border-gray-300 dark:group-hover:border-[#5f6368]"
+        }`}
+        value={isEditing ? editValue : label.name}
+        onFocus={() => {
+          setIsEditing(true);
+          setEditValue(label.name);
+        }}
+        onChange={(e) => setEditValue(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && handleUpdate()}
+        onBlur={() => setTimeout(() => setIsEditing(false), 200)}
+      />
+      
+      <IconButton
+        icon={isEditing ? iconMap.check : iconMap.pen}
+        onClick={() => {
+          if (isEditing) {
+            handleUpdate();
+          } else {
+            setIsEditing(true);
+            setTimeout(() => inputRef.current?.focus(), 0);
+          }
+        }}
+        size="w-8 h-8"
+        textClass="text-[14px]"
+        title={isEditing ? "Lưu" : EDIT_LABELS_TEXT.TOOLTIP_RENAME}
+        className={
+          isEditing
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200"
+        }
+      />
+    </div>
+  );
+};
 
 const EditLabelsModal = ({ isOpen, onClose, labels, setLabels }) => {
   const [newLabelName, setNewLabelName] = useState("");
   const [error, setError] = useState("");
-  const [editingId, setEditingId] = useState(null);
-  const [editValue, setEditValue] = useState("");
-  const [hoveredId, setHoveredId] = useState(null);
 
   const handleAddLabel = () => {
     const trimmed = newLabelName.trim();
@@ -22,17 +113,6 @@ const EditLabelsModal = ({ isOpen, onClose, labels, setLabels }) => {
 
     setLabels([...labels, { id: Date.now().toString(), name: trimmed }]);
     setNewLabelName("");
-  };
-
-  const handleUpdateLabel = (id) => {
-    const trimmed = editValue.trim();
-    if (!trimmed) return;
-    if(labels.find((l) => l.name === trimmed && l.id !== id)) {
-      setError(EDIT_LABELS_TEXT.ERROR_ALREADY_EXISTS);
-      return;
-    }
-    setLabels(labels.map((l) => (l.id === id ? { ...l, name: trimmed } : l)));
-    setEditingId(null);
   };
 
   return (
@@ -74,67 +154,9 @@ const EditLabelsModal = ({ isOpen, onClose, labels, setLabels }) => {
         <p className="text-red-500 text-[11px] ml-11 mb-2 italic">{error}</p>
       )}
 
-      <div className="max-h-75 overflow-y-auto custom-scrollbar">
+      <div className="max-h-80 overflow-y-auto custom-scrollbar">
         {labels.map((label) => (
-          <div
-            key={label.id}
-            className="flex items-center h-10 group px-1"
-            onMouseEnter={() => setHoveredId(label.id)}
-            onMouseLeave={() => setHoveredId(null)}
-          >
-            <IconButton
-              icon={
-                editingId === label.id
-                  ? iconMap.trash
-                  : hoveredId === label.id
-                    ? iconMap.trash
-                    : iconMap.label
-              }
-              onClick={() => {
-                if (editingId === label.id || hoveredId === label.id) {
-                  setLabels(labels.filter((l) => l.id !== label.id));
-                }
-              }}
-              size="w-8 h-8"
-              textClass="text-[14px]"
-              title={
-                editingId === label.id || hoveredId === label.id
-                  ? EDIT_LABELS_TEXT.TOOLTIP_DELETE
-                  : ""
-              }
-            />
-            <input
-              className={`flex-1 h-8 bg-transparent border-none outline-none px-3 py-1 text-sm border-b focus:border-gray-300 dark:focus:border-[#5f6368] dark:text-[#e8eaed] transition-colors ${editingId === label.id ? "border-gray-300 dark:border-[#5f6368]" : "border-transparent group-hover:border-gray-300 dark:group-hover:border-[#5f6368]"}`}
-              value={editingId === label.id ? editValue : label.name}
-              onFocus={() => {
-                setEditingId(label.id);
-                setEditValue(label.name);
-              }}
-              onChange={(e) => setEditValue(e.target.value)}
-              onKeyDown={(e) =>
-                e.key === "Enter" && handleUpdateLabel(label.id)
-              }
-              onBlur={() => setTimeout(() => setEditingId(null), 200)}
-            />
-            <IconButton
-              icon={editingId === label.id ? iconMap.check : iconMap.pen}
-              onClick={() =>
-                editingId === label.id
-                  ? handleUpdateLabel(label.id)
-                  : setEditingId(label.id)
-              }
-              size="w-8 h-8"
-              textClass="text-[14px]"
-              title={
-                editingId === label.id ? "Lưu" : EDIT_LABELS_TEXT.TOOLTIP_RENAME
-              }
-              className={
-                editingId === label.id || hoveredId === label.id
-                  ? "opacity-100"
-                  : "opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity"
-              }
-            />
-          </div>
+          <LabelItem key={label.id} label={label} labels={labels} setLabels={setLabels} />
         ))}
       </div>
     </BaseModal>
