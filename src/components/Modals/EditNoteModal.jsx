@@ -6,7 +6,11 @@ import IconButton from "../Commons/IconButton";
 import { iconMap } from "@/src/utils/Icon";
 import ColorPicker from "../Commons/ColorPicker";
 import TextFormatPicker from "../Commons/TextFormatPicker";
-import { NOTE_PROPERTIES, FORMAT_CONFIG, HEADING_TYPES } from "@/src/utils/Constants";
+import {
+  NOTE_PROPERTIES,
+  FORMAT_CONFIG,
+  HEADING_TYPES,
+} from "@/src/utils/Constants";
 
 const EditNoteModal = ({ isOpen, onClose, note, onSave }) => {
   const [title, setTitle] = useState(note?.title || "");

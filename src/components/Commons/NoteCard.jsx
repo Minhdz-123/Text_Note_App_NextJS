@@ -92,12 +92,12 @@ const NoteCard = ({
     >
       <div className="flex-1 p-4">
         {note.title && (
-          <h4 className="font-semibold text-[#202124] dark:text-[#e8eaed] mb-1">
+          <h4 className="font-semibold text-[#202124] dark:text-[#e8eaed] mb-1 break-words break-all">
             {note.title}
           </h4>
         )}
         <ContentTag
-          className={`text-[#202124] dark:text-[#e8eaed] whitespace-pre-wrap break-words${classes ? " " + classes : ""}`}
+          className={`text-[#202124] dark:text-[#e8eaed] whitespace-pre-wrap break-words break-all${classes ? " " + classes : ""}`}
         >
           {note.content}
         </ContentTag>
