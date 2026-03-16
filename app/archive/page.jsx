@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useEffect } from "react";
 import useNotes from "@/src/hooks/useNotes";
 import NoteCard from "@/src/components/Commons/NoteCard";
 import { useSearch } from "@/src/context/SearchContext";
@@ -9,47 +9,31 @@ import EditNoteModal from "@/src/components/Modals/EditNoteModal";
 import useLocalStorage from "@/src/hooks/useLocalStorage";
 import { usePageTitle } from "@/src/context/PageTitleContext";
 
+import useNoteUI from "@/src/hooks/useNoteUI";
+
 export default function ArchivePage() {
   const {
     archived,
-    restoreNote,
     editNote,
-    moveToTrash,
     changeNoteColor,
     changeNoteFormat,
-    addLabelToNote,
-    removeLabelFromNote,
   } = useNotes();
   const { searchTerm } = useSearch();
   const [labels] = useLocalStorage("keep_labels", []);
 
-  const [editModalOpen, setEditModalOpen] = useState(false);
-  const [noteToEdit, setNoteToEdit] = useState(null);
+  const {
+    editModalOpen,
+    setEditModalOpen,
+    noteToEdit,
+    handleAction,
+  } = useNoteUI();
+
   const { setPageTitle } = usePageTitle();
 
   useEffect(() => {
     setPageTitle("Lưu trữ");
     return () => setPageTitle(null);
   }, [setPageTitle]);
-
-  const handleAction = (action, note, labelId = null) => {
-    if (action === "restore") {
-      restoreNote(note.id);
-    }
-    if (action === "move_to_trash") {
-      moveToTrash(note.id);
-    }
-    if (action === "edit_note") {
-      setNoteToEdit(note);
-      setEditModalOpen(true);
-    }
-    if (action === "add_label") {
-      addLabelToNote(note.id, labelId);
-    }
-    if (action === "remove_label") {
-      removeLabelFromNote(note.id, labelId);
-    }
-  };
 
   const filtered = useMemo(() => {
     return archived.filter((note) => {

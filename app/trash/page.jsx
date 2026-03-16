@@ -7,25 +7,19 @@ import { useSearch } from "@/src/context/SearchContext";
 import { TRASH_CARD_BUTTON } from "@/src/utils/Constants";
 import useLocalStorage from "@/src/hooks/useLocalStorage";
 import { usePageTitle } from "@/src/context/PageTitleContext";
+import useNoteUI from "@/src/hooks/useNoteUI";
 
 export default function TrashPage() {
-  const { trash, restoreFromTrash, deleteNote, changeNoteColor, changeNoteFormat } = useNotes();
+  const { trash, changeNoteColor, changeNoteFormat } = useNotes();
   const { searchTerm } = useSearch();
   const [labels] = useLocalStorage("keep_labels", []);
   const { setPageTitle } = usePageTitle();
+  const { handleAction } = useNoteUI();
 
   useEffect(() => {
     setPageTitle("Thùng rác");
     return () => setPageTitle(null);
   }, [setPageTitle]);
-
-  const handleAction = (action, note) => {
-    if (action === "restore_from_trash") {
-      restoreFromTrash(note.id);
-    } else if (action === "delete_permanently") {
-      deleteNote(note.id);
-    }
-  };
 
   const filtered = useMemo(() => {
     return trash.filter((note) => {
