@@ -16,7 +16,15 @@ export default function useNotes() {
   };
 
   const editNote = (updatedNote) => {
-    setNotes(notes.map((n) => (n.id === updatedNote.id ? updatedNote : n)));
+    if (notes.some((n) => n.id === updatedNote.id)) {
+      setNotes(notes.map((n) => (n.id === updatedNote.id ? updatedNote : n)));
+    } else if (archived.some((n) => n.id === updatedNote.id)) {
+      setArchived(
+        archived.map((n) => (n.id === updatedNote.id ? updatedNote : n)),
+      );
+    } else if (trash.some((n) => n.id === updatedNote.id)) {
+      setTrash(trash.map((n) => (n.id === updatedNote.id ? updatedNote : n)));
+    }
   };
 
   const changeNoteColor = (noteId, color) => {
@@ -159,7 +167,7 @@ export default function useNotes() {
       setNotes(notes.map((n) => (n.id === noteId ? updateNoteLabels(n) : n)));
     } else if (noteInArchived) {
       setArchived(
-        archived.map((n) => (n.id === noteId ? updateNoteLabels(n) : n))
+        archived.map((n) => (n.id === noteId ? updateNoteLabels(n) : n)),
       );
     } else if (noteInTrash) {
       setTrash(trash.map((n) => (n.id === noteId ? updateNoteLabels(n) : n)));
@@ -183,7 +191,7 @@ export default function useNotes() {
       setNotes(notes.map((n) => (n.id === noteId ? updateNoteLabels(n) : n)));
     } else if (noteInArchived) {
       setArchived(
-        archived.map((n) => (n.id === noteId ? updateNoteLabels(n) : n))
+        archived.map((n) => (n.id === noteId ? updateNoteLabels(n) : n)),
       );
     } else if (noteInTrash) {
       setTrash(trash.map((n) => (n.id === noteId ? updateNoteLabels(n) : n)));
@@ -192,7 +200,7 @@ export default function useNotes() {
 
   const getNotesByLabel = (labelId) => {
     return notes.filter((n) =>
-      (n[NOTE_PROPERTIES.LABELS] || []).includes(labelId)
+      (n[NOTE_PROPERTIES.LABELS] || []).includes(labelId),
     );
   };
 

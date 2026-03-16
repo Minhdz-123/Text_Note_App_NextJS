@@ -96,9 +96,21 @@ export const NOTE_CARD_BUTTON = [
 
 export const ARCHIVE_CARD_BUTTON = [
   { id: 0, title: "Sửa", iconKey: "pen", action: "edit_note" },
-  { id: 1, title: "Khôi phục", iconKey: "refresh", action: "restore" },
+  {
+    id: 1,
+    title: "Các tùy chọn định dạng",
+    iconKey: "font",
+    action: "choose_format",
+  },
   {
     id: 2,
+    title: "Lựa chọn nền",
+    iconKey: "palette",
+    action: "choose_background",
+  },
+  { id: 3, title: "Khôi phục", iconKey: "refresh", action: "restore" },
+  {
+    id: 4,
     title: "Tùy chọn khác",
     iconKey: "ellipsis_vertical",
     action: "more_option",
