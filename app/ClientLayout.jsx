@@ -7,6 +7,7 @@ import useLocalStorage from "@/src/hooks/useLocalStorage";
 import EditLabelsModal from "@/src/components/Modals/EditLabelsModal";
 import ShortcutModal from "@/src/components/Modals/ShortcutModal";
 import { SearchProvider } from "@/src/context/SearchContext";
+import { PageTitleProvider } from "@/src/context/PageTitleContext";
 
 export default function ClientLayout({ children }) {
   const [isSidebarOpen, setIsSidebarOpen, sidebarLoaded] = useLocalStorage(
@@ -24,6 +25,7 @@ export default function ClientLayout({ children }) {
   const sidebarOpen = sidebarLoaded ? isSidebarOpen : false;
 
   return (
+    <PageTitleProvider>
     <SearchProvider>
       <Navbar
         onToggleSidebar={toggleSidebar}
@@ -58,5 +60,6 @@ export default function ClientLayout({ children }) {
         onClose={() => setIsShortcutModalOpen(false)}
       />
     </SearchProvider>
+    </PageTitleProvider>
   );
 }
