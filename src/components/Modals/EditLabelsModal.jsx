@@ -19,7 +19,7 @@ const LabelItem = ({ label, labels, setLabels }) => {
     if (labels.find((l) => l.name === trimmed && l.id !== label.id)) {
       setEditValue(label.name);
       setIsEditing(false);
-      return; 
+      return;
     }
     setLabels(labels.map((l) => (l.id === label.id ? { ...l, name: trimmed } : l)));
     setIsEditing(false);
@@ -60,11 +60,10 @@ const LabelItem = ({ label, labels, setLabels }) => {
 
       <input
         ref={inputRef}
-        className={`flex-1 h-8 bg-transparent border-none outline-none px-3 py-1 text-sm border-b focus:border-gray-300 dark:focus:border-[#5f6368] dark:text-[#e8eaed] transition-colors ${
-          isEditing
+        className={`flex-1 h-8 bg-transparent border-none outline-none px-3 py-1 text-sm border-b focus:border-gray-300 dark:focus:border-[#5f6368] dark:text-[#e8eaed] transition-colors ${isEditing
             ? "border-gray-300 dark:border-[#5f6368]"
             : "border-transparent group-hover:border-gray-300 dark:group-hover:border-[#5f6368]"
-        }`}
+          }`}
         value={isEditing ? editValue : label.name}
         onFocus={() => {
           setIsEditing(true);
@@ -74,7 +73,7 @@ const LabelItem = ({ label, labels, setLabels }) => {
         onKeyDown={(e) => e.key === "Enter" && handleUpdate()}
         onBlur={() => setTimeout(() => setIsEditing(false), 200)}
       />
-      
+
       <IconButton
         icon={isEditing ? iconMap.check : iconMap.pen}
         onClick={() => {

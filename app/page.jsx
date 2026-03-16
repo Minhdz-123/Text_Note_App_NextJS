@@ -10,7 +10,8 @@ import useLocalStorage from "@/src/hooks/useLocalStorage";
 import useNoteUI from "@/src/hooks/useNoteUI";
 
 export default function HomePage() {
-  const { notes, addNote, editNote, changeNoteColor, changeNoteFormat } = useNotes();
+  const noteActions = useNotes();
+  const { notes, addNote, editNote, changeNoteColor, changeNoteFormat } = noteActions;
   const { searchTerm } = useSearch();
   const [labels] = useLocalStorage("keep_labels", []);
 
@@ -19,7 +20,7 @@ export default function HomePage() {
     setEditModalOpen,
     noteToEdit,
     handleAction,
-  } = useNoteUI();
+  } = useNoteUI(noteActions);
 
   const handleAdd = (newNoteContent) => {
     addNote(newNoteContent);

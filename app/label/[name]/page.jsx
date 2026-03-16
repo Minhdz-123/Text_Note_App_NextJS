@@ -15,13 +15,14 @@ export default function LabelPage() {
   const params = useParams();
   const labelName = decodeURIComponent(params.name);
 
+  const noteActions = useNotes();
   const {
     notes,
     archived,
     editNote,
     changeNoteColor,
     changeNoteFormat,
-  } = useNotes();
+  } = noteActions;
   const { searchTerm } = useSearch();
   const [labels] = useLocalStorage("keep_labels", []);
 
@@ -30,7 +31,7 @@ export default function LabelPage() {
     setEditModalOpen,
     noteToEdit,
     handleAction,
-  } = useNoteUI();
+  } = useNoteUI(noteActions);
 
   const label = labels.find((l) => l.name === labelName);
   const { setPageTitle } = usePageTitle();

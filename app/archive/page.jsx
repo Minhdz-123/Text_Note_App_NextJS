@@ -12,12 +12,13 @@ import { usePageTitle } from "@/src/context/PageTitleContext";
 import useNoteUI from "@/src/hooks/useNoteUI";
 
 export default function ArchivePage() {
+  const noteActions = useNotes();
   const {
     archived,
     editNote,
     changeNoteColor,
     changeNoteFormat,
-  } = useNotes();
+  } = noteActions;
   const { searchTerm } = useSearch();
   const [labels] = useLocalStorage("keep_labels", []);
 
@@ -26,7 +27,7 @@ export default function ArchivePage() {
     setEditModalOpen,
     noteToEdit,
     handleAction,
-  } = useNoteUI();
+  } = useNoteUI(noteActions);
 
   const { setPageTitle } = usePageTitle();
 

@@ -63,14 +63,18 @@ export default function useNotes() {
     const note = notes.find((n) => n.id === noteId);
     if (!note) return;
     setNotes(notes.filter((n) => n.id !== noteId));
-    setArchived([note, ...archived]);
+    if (!archived.some((n) => n.id === noteId)) {
+      setArchived([note, ...archived]);
+    }
   };
 
   const restoreNote = (noteId) => {
     const note = archived.find((n) => n.id === noteId);
     if (!note) return;
     setArchived(archived.filter((n) => n.id !== noteId));
-    setNotes([note, ...notes]);
+    if (!notes.some((n) => n.id === noteId)) {
+      setNotes([note, ...notes]);
+    }
   };
 
   const moveToTrash = (noteId) => {
@@ -90,14 +94,18 @@ export default function useNotes() {
       setNotes(notes.filter((n) => n.id !== noteId));
     }
 
-    setTrash([note, ...trash]);
+    if (!trash.some((n) => n.id === noteId)) {
+      setTrash([note, ...trash]);
+    }
   };
 
   const restoreFromTrash = (noteId) => {
     const note = trash.find((n) => n.id === noteId);
     if (!note) return;
     setTrash(trash.filter((n) => n.id !== noteId));
-    setNotes([note, ...notes]);
+    if (!notes.some((n) => n.id === noteId)) {
+      setNotes([note, ...notes]);
+    }
   };
 
   const changeNoteFormat = (noteId, formatType) => {
@@ -204,10 +212,20 @@ export default function useNotes() {
     );
   };
 
+  const deduplicate = (arr) => {
+    const seen = new Set();
+    return arr.filter((item) => {
+      if (!item || !item.id) return false;
+      if (seen.has(item.id)) return false;
+      seen.add(item.id);
+      return true;
+    });
+  };
+
   return {
-    notes,
-    archived,
-    trash,
+    notes: deduplicate(notes),
+    archived: deduplicate(archived),
+    trash: deduplicate(trash),
     addNote,
     editNote,
     changeNoteColor,
