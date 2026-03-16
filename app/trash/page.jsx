@@ -1,16 +1,23 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import useNotes from "@/src/hooks/useNotes";
 import NoteCard from "@/src/components/Commons/NoteCard";
 import { useSearch } from "@/src/context/SearchContext";
 import { TRASH_CARD_BUTTON } from "@/src/utils/Constants";
 import useLocalStorage from "@/src/hooks/useLocalStorage";
+import { usePageTitle } from "@/src/context/PageTitleContext";
 
 export default function TrashPage() {
   const { trash, restoreFromTrash, deleteNote, changeNoteColor, changeNoteFormat } = useNotes();
   const { searchTerm } = useSearch();
   const [labels] = useLocalStorage("keep_labels", []);
+  const { setPageTitle } = usePageTitle();
+
+  useEffect(() => {
+    setPageTitle("Thùng rác");
+    return () => setPageTitle(null);
+  }, [setPageTitle]);
 
   const handleAction = (action, note) => {
     if (action === "restore_from_trash") {
@@ -32,8 +39,6 @@ export default function TrashPage() {
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen p-4">
-      <h1 className="text-2xl font-semibold mb-6">Thùng rác</h1>
-      
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full max-w-300 mt-8">
           {filtered.map((note) => (
             <NoteCard

@@ -1,20 +1,36 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import useNotes from "@/src/hooks/useNotes";
 import NoteCard from "@/src/components/Commons/NoteCard";
 import { useSearch } from "@/src/context/SearchContext";
 import { ARCHIVE_CARD_BUTTON } from "@/src/utils/Constants";
 import EditNoteModal from "@/src/components/Modals/EditNoteModal";
 import useLocalStorage from "@/src/hooks/useLocalStorage";
+import { usePageTitle } from "@/src/context/PageTitleContext";
 
 export default function ArchivePage() {
-  const { archived, restoreNote, editNote, moveToTrash, changeNoteColor, changeNoteFormat, addLabelToNote, removeLabelFromNote } = useNotes();
+  const {
+    archived,
+    restoreNote,
+    editNote,
+    moveToTrash,
+    changeNoteColor,
+    changeNoteFormat,
+    addLabelToNote,
+    removeLabelFromNote,
+  } = useNotes();
   const { searchTerm } = useSearch();
   const [labels] = useLocalStorage("keep_labels", []);
 
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState(null);
+  const { setPageTitle } = usePageTitle();
+
+  useEffect(() => {
+    setPageTitle("Lưu trữ");
+    return () => setPageTitle(null);
+  }, [setPageTitle]);
 
   const handleAction = (action, note, labelId = null) => {
     if (action === "restore") {
@@ -47,7 +63,6 @@ export default function ArchivePage() {
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen p-4">
-      <h1 className="text-2xl font-semibold mb-6">Lưu trữ</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full max-w-300 mt-8">
         {filtered.map((note) => (
           <NoteCard

@@ -1,12 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import useNotes from "@/src/hooks/useNotes";
 import NoteCard from "@/src/components/Commons/NoteCard";
 import { useSearch } from "@/src/context/SearchContext";
 import EditNoteModal from "@/src/components/Modals/EditNoteModal";
 import useLocalStorage from "@/src/hooks/useLocalStorage";
+import { usePageTitle } from "@/src/context/PageTitleContext";
 import { NOTE_PROPERTIES } from "@/src/utils/Constants";
 
 export default function LabelPage() {
@@ -28,6 +29,14 @@ export default function LabelPage() {
   const [noteToEdit, setNoteToEdit] = useState(null);
 
   const label = labels.find((l) => l.name === labelName);
+  const { setPageTitle } = usePageTitle();
+
+  useEffect(() => {
+    if (label) {
+      setPageTitle(label.name);
+    }
+    return () => setPageTitle(null);
+  }, [label, setPageTitle]);
 
   const labeledNotes = useMemo(() => {
     if (!label) return [];
@@ -63,14 +72,13 @@ export default function LabelPage() {
   if (!label) {
     return (
       <div className="flex flex-col items-center w-full min-h-screen p-4">
-        <h1 className="text-2xl font-semibold mb-6">undefined</h1>
+        <h1 className="text-2xl font-semibold mb-6"></h1>
       </div>
     );
   }
 
   return (
     <div className="flex flex-col items-center w-full min-h-screen p-4">
-      <h1 className="text-2xl font-semibold mb-6">{label.name}</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full max-w-300 mt-8">
         {filteredNotes.map((note) => (
           <NoteCard
@@ -85,9 +93,7 @@ export default function LabelPage() {
       </div>
 
       {filteredNotes.length === 0 && (
-        <div className="text-center text-[#5f6368] dark:text-[#9aa0a6] mt-8">
-          
-        </div>
+        <div className="text-center text-[#5f6368] dark:text-[#9aa0a6] mt-8"></div>
       )}
 
       <EditNoteModal

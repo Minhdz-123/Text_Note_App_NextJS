@@ -7,10 +7,12 @@ import Dropdown from "@/src/components/Commons/Dropdown";
 import useDarkMode from "@/src/hooks/useDarkMode";
 import TextInput from "../Commons/TextInput";
 import { useSearch } from "@/src/context/SearchContext";
+import { usePageTitle } from "@/src/context/PageTitleContext";
 
 const Navbar = ({ onToggleSidebar, onOpenShortcutModal }) => {
   const { toggleDark } = useDarkMode();
   const { setSearchTerm } = useSearch();
+  const { pageTitle } = usePageTitle();
 
   const actionHandlers = {
     dark_mode: toggleDark,
@@ -25,16 +27,22 @@ const Navbar = ({ onToggleSidebar, onOpenShortcutModal }) => {
           title="Trình đơn chính"
           onClick={onToggleSidebar}
         />
-        <div className="flex items-center ml-2 cursor-pointer">
-          <img
-            src="https://www.gstatic.com/images/branding/product/1x/keep_2020q4_48dp.png"
-            alt="Keep Logo"
-            className="w-10 h-10"
-          />
-          <span className="text-[#5f6368] dark:text-[#e8eaed] text-[22px] ml-2 font-normal family-google-sans">
-            Keep
+        {pageTitle ? (
+          <span className="text-[#202124] dark:text-[#e8eaed] text-[20px] ml-2 font-medium">
+            {pageTitle}
           </span>
-        </div>
+        ) : (
+          <div className="flex items-center ml-2 cursor-pointer">
+            <img
+              src="https://www.gstatic.com/images/branding/product/1x/keep_2020q4_48dp.png"
+              alt="Keep Logo"
+              className="w-10 h-10"
+            />
+            <span className="text-[#5f6368] dark:text-[#e8eaed] text-[22px] ml-2 font-normal family-google-sans">
+              Keep
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="flex-1 max-w-180 ml-10 mr-auto">
