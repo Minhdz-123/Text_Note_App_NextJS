@@ -10,8 +10,9 @@ export default function useNotes() {
   const [archived, setArchived] = useLocalStorage(STORAGE_KEYS.ARCHIVED, []);
   const [trash, setTrash] = useLocalStorage(STORAGE_KEYS.TRASH, []);
 
-  const addNote = (content, title = "") => {
-    const newNote = { id: Date.now(), content, title };
+  const addNote = (noteData) => {
+    const data = typeof noteData === "string" ? { content: noteData } : noteData;
+    const newNote = { id: Date.now(), ...data };
     setNotes([newNote, ...notes]);
   };
 

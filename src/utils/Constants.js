@@ -69,6 +69,22 @@ export const EDIT_LABELS_TEXT = {
   BUTTON_DONE: "Xong",
   TOOLTIP_DELETE: "Xóa nhãn",
   TOOLTIP_RENAME: "Đổi tên nhãn",
+  TOOLTIP_CREATE: "Tạo nhãn mới",
+  TOOLTIP_CANCEL: "Hủy",
+  TOOLTIP_SAVE: "Lưu",
+  TOOLTIP_ADD: "Tạo nhãn",
+};
+
+export const EDIT_NOTE_TEXT = {
+  PLACEHOLDER_TITLE: "Tiêu đề",
+  PLACEHOLDER_CONTENT: "Ghi chú...",
+  TOOLTIP_SAVE: "Lưu",
+  TIMESTAMP_PREFIX: "Đã gửi vào",
+};
+
+export const SHORTCUT_MODAL_TEXT = {
+  TITLE: "Phím tắt",
+  TOOLTIP_CLOSE: "Đóng",
 };
 
 export const NOTE_CARD_BUTTON = [

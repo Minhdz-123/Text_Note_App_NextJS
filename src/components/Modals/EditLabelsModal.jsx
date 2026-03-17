@@ -86,7 +86,7 @@ const LabelItem = ({ label, labels, setLabels }) => {
         }}
         size="w-8 h-8"
         textClass="text-[14px]"
-        title={isEditing ? "Lưu" : EDIT_LABELS_TEXT.TOOLTIP_RENAME}
+        title={isEditing ? EDIT_LABELS_TEXT.TOOLTIP_SAVE : EDIT_LABELS_TEXT.TOOLTIP_RENAME}
         className={
           isEditing
             ? "opacity-100 pointer-events-auto"
@@ -125,7 +125,7 @@ const EditLabelsModal = ({ isOpen, onClose, labels, setLabels }) => {
           }}
           size="w-8 h-8"
           textClass="text-[14px]"
-          title={newLabelName ? "Hủy" : "Tạo nhãn mới"}
+          title={newLabelName ? EDIT_LABELS_TEXT.TOOLTIP_CANCEL : EDIT_LABELS_TEXT.TOOLTIP_CREATE}
         />
         <input
           placeholder={EDIT_LABELS_TEXT.PLACEHOLDER_CREATE}
@@ -142,7 +142,7 @@ const EditLabelsModal = ({ isOpen, onClose, labels, setLabels }) => {
           onClick={handleAddLabel}
           size="w-8 h-8"
           textClass="text-[14px]"
-          title="Tạo nhãn"
+          title={EDIT_LABELS_TEXT.TOOLTIP_ADD}
           className={
             newLabelName ? "opacity-100" : "opacity-0 pointer-events-none"
           }

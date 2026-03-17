@@ -2,6 +2,7 @@ import BaseModal from "../Commons/BaseModal";
 import { KEYBOARD_SHORTCUTS } from "@/src/utils/Data";
 import IconButton from "../Commons/IconButton";
 import { iconMap } from "../../utils/Icon";
+import { SHORTCUT_MODAL_TEXT } from "@/src/utils/Constants";
 
 const ShortcutModal = ({ isOpen, onClose }) => {
   return (
@@ -15,13 +16,13 @@ const ShortcutModal = ({ isOpen, onClose }) => {
       customHeader={
         <div className="flex justify-between items-center p-4 pb-2 border-b border-gray-200 dark:border-[#5f6368] shrink-0">
           <h3 className="text-[22px] font-medium px-2 font-['Google_Sans',Roboto,Arial,sans-serif]">
-            Phím tắt
+            {SHORTCUT_MODAL_TEXT.TITLE}
           </h3>
           <IconButton
             icon={iconMap.close}
             onClick={onClose}
             className="w-10 h-10 hover:bg-gray-100 dark:hover:bg-[#3c3c3c]"
-            title="Đóng"
+            title={SHORTCUT_MODAL_TEXT.TOOLTIP_CLOSE}
           />
         </div>
       }

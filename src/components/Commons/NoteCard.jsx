@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import {
   NOTE_CARD_BUTTON,
   MORE_OPTION_MENU,
@@ -13,6 +13,22 @@ import TextFormatPicker from "./TextFormatPicker";
 import LabelSelectionDropdown from "./LabelSelectionDropdown";
 import { iconMap } from "@/src/utils/Icon";
 
+const getContentRender = (formats = []) => {
+  const ContentTag = formats.reduce((tag, format) => {
+    const config = FORMAT_CONFIG[format];
+    return config?.tag ?? tag;
+  }, "p");
+
+  const classes = formats
+    .reduce((result, format) => {
+      const config = FORMAT_CONFIG[format];
+      return config ? `${result} ${config.classes}` : result;
+    }, "")
+    .trim();
+
+  return { ContentTag, classes };
+};
+
 const NoteCard = ({
   note,
   onAction,
@@ -20,24 +36,31 @@ const NoteCard = ({
   onFormatChange,
   labels = [],
   buttons = NOTE_CARD_BUTTON,
+  className = "",
 }) => {
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showFormatPicker, setShowFormatPicker] = useState(false);
   const [showLabelSelection, setShowLabelSelection] = useState(false);
-  const dropdownRef = useRef(null);
 
-  const handleCardClick = () => {
-    if (onAction) onAction("edit_note", note);
+  const noteFormats = note[NOTE_PROPERTIES.FORMATS] || [];
+  const noteLabels = note[NOTE_PROPERTIES.LABELS] || [];
+  const bgColor = note[NOTE_PROPERTIES.COLOR_CLASS] || "bg-white";
+  const isCustomColor = bgColor !== "bg-white" && bgColor !== "bg-transparent";
+  const { ContentTag, classes } = getContentRender(noteFormats);
+
+  const handleCardClick = () => onAction?.("edit_note", note);
+
+  const popupToggles = {
+    choose_background: () => setShowColorPicker((prev) => !prev),
+    choose_format: () => setShowFormatPicker((prev) => !prev),
   };
 
   const handleButtonClick = (e, action) => {
     e.stopPropagation();
-    if (action === "choose_background") {
-      setShowColorPicker(!showColorPicker);
-    } else if (action === "choose_format") {
-      setShowFormatPicker(!showFormatPicker);
+    if (popupToggles[action]) {
+      popupToggles[action]();
     } else {
-      if (onAction) onAction(action, note);
+      onAction?.(action, note);
     }
   };
 
@@ -45,49 +68,107 @@ const NoteCard = ({
     if (action === "add_labels") {
       setShowLabelSelection(true);
     } else {
-      if (onAction) onAction(action, note);
+      onAction?.(action, note);
     }
   };
 
-  const handleColorSelect = (color) => {
-    onColorChange?.(note.id, color);
-    setShowColorPicker(false);
+  const handleLabelToggle = (labelId) => {
+    const action = noteLabels.includes(labelId) ? "remove_label" : "add_label";
+    onAction?.(action, note, labelId);
   };
 
-  const handleFormatSelect = (formatType) => {
-    onFormatChange?.(note.id, formatType);
-  };
+  const renderButton = (item) => {
+    const iconBtn = (
+      <IconButton
+        icon={iconMap[item.iconKey]}
+        title={item.title}
+        size="w-8 h-8"
+        textClass="text-[14px]"
+        onClick={(e) => handleButtonClick(e, item.action)}
+      />
+    );
 
-  const bgColor = note[NOTE_PROPERTIES.COLOR_CLASS] || "bg-white";
-
-  const getContentRender = () => {
-    const formats = note[NOTE_PROPERTIES.FORMATS] || [];
-    let ContentTag = "p";
-    let classes = "";
-
-    for (const format of formats) {
-      const config = FORMAT_CONFIG[format];
-      if (config && config.tag) {
-        ContentTag = config.tag;
-        break;
-      }
+    if (item.action === "choose_background") {
+      return (
+        <div key={item.id} className="relative">
+          {iconBtn}
+          {showColorPicker && (
+            <ColorPicker
+              activeColorClass={bgColor}
+              onColorSelect={(color) => {
+                onColorChange?.(note.id, color);
+                setShowColorPicker(false);
+              }}
+              onClose={() => setShowColorPicker(false)}
+            />
+          )}
+        </div>
+      );
     }
 
-    classes = formats
-      .reduce((result, format) => {
-        const config = FORMAT_CONFIG[format];
-        return config ? result + " " + config.classes : result;
-      }, "")
-      .trim();
+    if (item.action === "choose_format") {
+      return (
+        <div key={item.id} className="relative">
+          {iconBtn}
+          {showFormatPicker && (
+            <TextFormatPicker
+              selectedFormats={noteFormats}
+              onFormatSelect={(formatType) =>
+                onFormatChange?.(note.id, formatType)
+              }
+              onClose={() => setShowFormatPicker(false)}
+            />
+          )}
+        </div>
+      );
+    }
 
-    return { ContentTag, classes };
+    if (item.action === "more_option") {
+      return (
+        <div
+          key={item.id}
+          className="relative"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Dropdown
+            options={MORE_OPTION_MENU.map((option) => ({
+              label: option.label,
+              onClick: () => handleMoreOptionClick(option.action),
+            }))}
+            trigger={
+              <IconButton
+                icon={iconMap[item.iconKey]}
+                title={item.title}
+                size="w-8 h-8"
+                textClass="text-[14px]"
+              />
+            }
+            width="225px"
+          />
+        </div>
+      );
+    }
+
+    return (
+      <IconButton
+        key={item.id}
+        icon={iconMap[item.iconKey]}
+        title={item.title}
+        size="w-8 h-8"
+        textClass="text-[14px]"
+        onClick={(e) => handleButtonClick(e, item.action)}
+      />
+    );
   };
-
-  const { ContentTag, classes } = getContentRender();
 
   return (
     <div
-      className={`group flex flex-col ${bgColor} dark:bg-[#202124] border border-[#e0e0e0] dark:border-[#5f6368] rounded-lg shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer`}
+      className={`
+        ${className} group flex flex-col rounded-lg shadow-sm hover:shadow-lg
+        transition-all duration-200 cursor-pointer
+        border border-[#e0e0e0] dark:border-[#5f6368]
+        ${bgColor} ${!isCustomColor ? "dark:bg-[#202124]" : ""}
+      `}
       onClick={handleCardClick}
     >
       <div className="flex-1 p-4">
@@ -97,13 +178,16 @@ const NoteCard = ({
           </h4>
         )}
         <ContentTag
-          className={`text-[#202124] dark:text-[#e8eaed] whitespace-pre-wrap wrap-break-word break-all${classes ? " " + classes : ""}`}
+          className={`text-[#202124] dark:text-[#e8eaed] whitespace-pre-wrap wrap-break-word break-all${
+            classes ? ` ${classes}` : ""
+          }`}
         >
           {note.content}
         </ContentTag>
-        {(note[NOTE_PROPERTIES.LABELS] || []).length > 0 && (
+
+        {noteLabels.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-3">
-            {(note[NOTE_PROPERTIES.LABELS] || []).map((labelId) => {
+            {noteLabels.map((labelId) => {
               const label = labels.find((l) => l.id === labelId);
               return label ? (
                 <span
@@ -117,7 +201,18 @@ const NoteCard = ({
           </div>
         )}
       </div>
-      <div className="relative flex justify-center gap-1 px-2 py-2 border-t border-[#e0e0e0] dark:border-[#5f6368] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+
+      <div
+        className={`
+          relative flex justify-center gap-1 px-2 py-2 border-t border-[#e0e0e0] dark:border-[#5f6368] 
+          transition-opacity duration-200
+          ${
+            showColorPicker || showFormatPicker || showLabelSelection
+              ? "opacity-100"
+              : "opacity-0 group-hover:opacity-100"
+          }
+        `}
+      >
         {showLabelSelection && (
           <div
             className="absolute right-0 bottom-full mb-1 z-50"
@@ -125,95 +220,13 @@ const NoteCard = ({
           >
             <LabelSelectionDropdown
               labels={labels}
-              noteLabels={note[NOTE_PROPERTIES.LABELS] || []}
-              onLabelToggle={(labelId) => {
-                if ((note[NOTE_PROPERTIES.LABELS] || []).includes(labelId)) {
-                  onAction?.("remove_label", note, labelId);
-                } else {
-                  onAction?.("add_label", note, labelId);
-                }
-              }}
+              noteLabels={noteLabels}
+              onLabelToggle={handleLabelToggle}
               onClose={() => setShowLabelSelection(false)}
             />
           </div>
         )}
-        {buttons.map((item) => {
-          if (item.action === "choose_format") {
-            return (
-              <div key={item.id} className="relative" ref={dropdownRef}>
-                <IconButton
-                  icon={iconMap[item.iconKey]}
-                  title={item.title}
-                  size="w-8 h-8"
-                  textClass="text-[14px]"
-                  onClick={(e) => handleButtonClick(e, item.action)}
-                />
-                {showFormatPicker && (
-                  <TextFormatPicker
-                    selectedFormats={note[NOTE_PROPERTIES.FORMATS] || []}
-                    onFormatSelect={handleFormatSelect}
-                    onClose={() => setShowFormatPicker(false)}
-                  />
-                )}
-              </div>
-            );
-          }
-          if (item.action === "choose_background") {
-            return (
-              <div key={item.id} className="relative" ref={dropdownRef}>
-                <IconButton
-                  icon={iconMap[item.iconKey]}
-                  title={item.title}
-                  size="w-8 h-8"
-                  textClass="text-[14px]"
-                  onClick={(e) => handleButtonClick(e, item.action)}
-                />
-                {showColorPicker && (
-                  <ColorPicker
-                    onColorSelect={handleColorSelect}
-                    onClose={() => setShowColorPicker(false)}
-                  />
-                )}
-              </div>
-            );
-          }
-          if (item.action === "more_option") {
-            return (
-              <div
-                key={item.id}
-                className="relative"
-                ref={dropdownRef}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <Dropdown
-                  options={MORE_OPTION_MENU.map((option) => ({
-                    label: option.label,
-                    onClick: () => handleMoreOptionClick(option.action),
-                  }))}
-                  trigger={
-                    <IconButton
-                      icon={iconMap[item.iconKey]}
-                      title={item.title}
-                      size="w-8 h-8"
-                      textClass="text-[14px]"
-                    />
-                  }
-                  width="225px"
-                />
-              </div>
-            );
-          }
-          return (
-            <IconButton
-              key={item.id}
-              icon={iconMap[item.iconKey]}
-              title={item.title}
-              size="w-8 h-8"
-              textClass="text-[14px]"
-              onClick={(e) => handleButtonClick(e, item.action)}
-            />
-          );
-        })}
+        {buttons.map(renderButton)}
       </div>
     </div>
   );
