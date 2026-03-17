@@ -43,7 +43,7 @@ const LabelItem = ({ label, labels, setLabels }) => {
               size="w-8 h-8"
               textClass="text-[14px]"
               title={EDIT_LABELS_TEXT.TOOLTIP_DELETE}
-            />
+            />  
           </div>
         </>
       ) : (

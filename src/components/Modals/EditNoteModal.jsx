@@ -95,7 +95,7 @@ const EditNoteModal = ({ isOpen, onClose, note, onSave }) => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Tiêu đề"
-          className="w-full bg-transparent border-none outline-none text-lg font-semibold dark:text-[#e8eaed]"
+          className="w-full bg-transparent border-none outline-none text-lg text-[20px] dark:text-[#e8eaed]"
         />
         <textarea
           value={content}
