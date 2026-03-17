@@ -12,12 +12,14 @@ const BaseModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-2000 flex items-center justify-center bg-black/50" onClick={onClose}>
-      <div 
-        className={`${className} bg-white dark:bg-[#2d2e31] rounded-lg shadow-lg flex flex-col text-[#202124] dark:text-[#e8eaed]`}
+    <div
+      className="fixed inset-0 z-2000 flex items-center justify-center bg-black/50"
+      onClick={onClose}
+    >
+      <div
+        className={`${className} ${!className.includes("bg-") ? "bg-white dark:bg-[#2d2e31]" : ""} rounded-lg shadow-lg flex flex-col text-[#202124] dark:text-[#e8eaed]`}
         onClick={(e) => e.stopPropagation()}
       >
-
         {customHeader && customHeader}
 
         <div className={bodyClassName}>

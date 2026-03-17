@@ -92,7 +92,7 @@ const NoteCard = ({
     >
       <div className="flex-1 p-4">
         {note.title && (
-          <h4 className="font-semibold text-[#202124] dark:text-[#e8eaed] mb-1 wrap-break-word break-all">
+          <h4 className="text-[20px] text-[#202124] dark:text-[#e8eaed] mb-1 wrap-break-word break-all">
             {note.title}
           </h4>
         )}
