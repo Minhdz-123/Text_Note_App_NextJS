@@ -1,34 +1,16 @@
 "use client";
 
-import { useMemo, useEffect } from "react";
+import { useEffect } from "react";
 import useNotes from "@/src/hooks/useNotes";
-import NoteCard from "@/src/components/Commons/NoteCard";
-import { useSearch } from "@/src/context/SearchContext";
+import NoteGrid from "@/src/components/Commons/NoteGrid";
+import useFilteredNotes from "@/src/hooks/useFilteredNotes";
 import { ARCHIVE_CARD_BUTTON } from "@/src/utils/Constants";
-import EditNoteModal from "@/src/components/Modals/EditNoteModal";
-import useLocalStorage from "@/src/hooks/useLocalStorage";
 import { usePageTitle } from "@/src/context/PageTitleContext";
-
-import useNoteUI from "@/src/hooks/useNoteUI";
 
 export default function ArchivePage() {
   const noteActions = useNotes();
-  const {
-    archived,
-    editNote,
-    changeNoteColor,
-    changeNoteFormat,
-  } = noteActions;
-  const { searchTerm } = useSearch();
-  const [labels] = useLocalStorage("keep_labels", []);
-
-  const {
-    editModalOpen,
-    setEditModalOpen,
-    noteToEdit,
-    handleAction,
-  } = useNoteUI(noteActions);
-
+  const { archived } = noteActions;
+  const filtered = useFilteredNotes(archived);
   const { setPageTitle } = usePageTitle();
 
   useEffect(() => {
@@ -36,41 +18,13 @@ export default function ArchivePage() {
     return () => setPageTitle(null);
   }, [setPageTitle]);
 
-  const filtered = useMemo(() => {
-    return archived.filter((note) => {
-      const term = searchTerm.toLowerCase();
-      return (
-        (note.title && note.title.toLowerCase().includes(term)) ||
-        (note.content && note.content.toLowerCase().includes(term))
-      );
-    });
-  }, [archived, searchTerm]);
-
   return (
-    <div className="flex flex-col items-center w-full min-h-screen p-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full max-w-300 mt-8">
-        {filtered.map((note) => (
-          <NoteCard
-            key={note.id}
-            note={note}
-            onAction={handleAction}
-            onColorChange={changeNoteColor}
-            onFormatChange={changeNoteFormat}
-            buttons={ARCHIVE_CARD_BUTTON}
-            labels={labels}
-          />
-        ))}
-      </div>
-
-      <EditNoteModal
-        key={`${editModalOpen}-${noteToEdit?.id}`}
-        isOpen={editModalOpen}
-        note={noteToEdit}
-        onClose={() => setEditModalOpen(false)}
-        onSave={(updated) => {
-          editNote(updated);
-          setEditModalOpen(false);
-        }}
+    <div className="flex flex-col w-full min-h-screen p-4 gap-4">
+      <NoteGrid
+        notes={filtered}
+        noteActions={noteActions}
+  
+        buttons={ARCHIVE_CARD_BUTTON}
       />
     </div>
   );

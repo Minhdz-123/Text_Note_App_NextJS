@@ -11,7 +11,8 @@ export default function useNotes() {
   const [trash, setTrash] = useLocalStorage(STORAGE_KEYS.TRASH, []);
 
   const addNote = (noteData) => {
-    const data = typeof noteData === "string" ? { content: noteData } : noteData;
+    const data =
+      typeof noteData === "string" ? { content: noteData } : noteData;
     const newNote = { id: Date.now(), ...data };
     setNotes([newNote, ...notes]);
   };
@@ -223,6 +224,7 @@ export default function useNotes() {
     });
   };
 
+  const reorderNotes = (reorderNotes) => setNotes(reorderNotes);
   return {
     notes: deduplicate(notes),
     archived: deduplicate(archived),
@@ -239,5 +241,6 @@ export default function useNotes() {
     addLabelToNote,
     removeLabelFromNote,
     getNotesByLabel,
+    reorderNotes,
   };
 }

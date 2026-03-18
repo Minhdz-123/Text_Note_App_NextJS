@@ -50,12 +50,18 @@
 }
 
 @layer utilities {
+  /* .note-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+    align-items: start;
+    width: 100%;
+  } */
   .keep-masonry {
-    columns: 240px;
+    columns: 240px 5; 
     column-gap: 12px;
   }
-
-  .keep-masonry-item {
+  .keep-masonry > * {
     break-inside: avoid;
     margin-bottom: 12px;
   }
