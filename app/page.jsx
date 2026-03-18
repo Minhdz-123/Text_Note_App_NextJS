@@ -37,19 +37,21 @@ export default function HomePage() {
   }, [notes, searchTerm]);
 
   return (
-    <div className="flex flex-col items-center w-full min-h-screen p-4">
+    <div className="flex flex-col w-full min-h-screen p-4 gap-4">
       <NoteBox onAddNote={handleAdd} />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full max-w-300 mt-8">
+      <div className="keep-masonry">
         {filteredNotes.map((note) => (
-          <NoteCard 
-            key={note.id} 
-            note={note} 
-            onAction={handleAction}
-            onColorChange={changeNoteColor}
-            onFormatChange={changeNoteFormat}
-            labels={labels}
-          />
+          <div className="keep-masonry-item" key={note.id}>
+            <NoteCard
+              key={note.id}
+              note={note}
+              onAction={handleAction}
+              onColorChange={changeNoteColor}
+              onFormatChange={changeNoteFormat}
+              labels={labels}
+            />
+          </div>
         ))}
       </div>
 

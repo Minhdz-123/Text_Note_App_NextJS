@@ -48,3 +48,15 @@
     border-width: 0 0 0 4px;
   }
 }
+
+@layer utilities {
+  .keep-masonry {
+    columns: 240px;
+    column-gap: 12px;
+  }
+
+  .keep-masonry-item {
+    break-inside: avoid;
+    margin-bottom: 12px;
+  }
+}

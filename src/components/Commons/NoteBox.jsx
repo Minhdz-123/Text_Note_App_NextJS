@@ -47,7 +47,7 @@ function NoteBox({ onAddNote }) {
   }
 
   return (
-    <div className="flex justify-center w-full px-4 mt-8">
+    <div className="flex justify-center w-full px-4 mt-7">
       <div 
         className="w-full max-w-150 bg-white dark:bg-[#202124] border border-[#e0e0e0] dark:border-[#5f6368] rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 flex items-center min-h-11.5 cursor-text"
         onClick={() => setIsExpanded(true)}
