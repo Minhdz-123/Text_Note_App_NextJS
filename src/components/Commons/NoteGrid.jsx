@@ -4,6 +4,7 @@ import {
   DndContext,
   closestCenter,
   PointerSensor,
+  KeyboardSensor,
   useSensor,
   useSensors,
   DragOverlay,
@@ -12,6 +13,7 @@ import {
   SortableContext,
   rectSortingStrategy,
   arrayMove,
+  sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 import { useState } from "react";
 
@@ -25,7 +27,6 @@ export default function NoteGrid({
   notes,
   noteActions,
   buttons,
-  masonry = false,
   sortable = false,
   showModal = true,
 }) {
@@ -41,6 +42,9 @@ export default function NoteGrid({
     useSensor(PointerSensor, {
       activationConstraint: { distance: 8 },
     }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
   );
 
   const handleDragStart = ({ active }) => {
@@ -64,11 +68,10 @@ export default function NoteGrid({
     labels,
   });
 
-  const gridClass = masonry
-    ? "keep-masonry w-full max-w-300 mt-8 mx-auto"
-    : "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full max-w-300 mt-8 mx-auto";
+  const gridClass =
+    "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full max-w-300 mt-8 mx-auto";
 
-  const itemClass = masonry ? "keep-masonry-item" : "";
+  const itemClass = "";
 
   if (!notes || notes.length === 0) return null;
 
@@ -120,6 +123,7 @@ export default function NoteGrid({
 
       {showModal && (
         <EditNoteModal
+          key={`${editModalOpen}-${noteToEdit?.id}`}
           isOpen={editModalOpen}
           note={noteToEdit}
           onClose={() => setEditModalOpen(false)}

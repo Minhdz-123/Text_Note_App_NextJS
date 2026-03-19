@@ -23,7 +23,6 @@ export default function ArchivePage() {
       <NoteGrid
         notes={filtered}
         noteActions={noteActions}
-  
         buttons={ARCHIVE_CARD_BUTTON}
       />
     </div>

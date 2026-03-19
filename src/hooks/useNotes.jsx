@@ -224,7 +224,7 @@ export default function useNotes() {
     });
   };
 
-  const reorderNotes = (reorderNotes) => setNotes(reorderNotes);
+  const reorderNotes = (newOrder) => setNotes(newOrder);
   return {
     notes: deduplicate(notes),
     archived: deduplicate(archived),

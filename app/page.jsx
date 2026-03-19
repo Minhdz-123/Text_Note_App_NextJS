@@ -17,7 +17,6 @@ export default function HomePage() {
         notes={filteredNotes}
         noteActions={noteActions}
         sortable
-        //  masonry
       />
     </div>
   );
