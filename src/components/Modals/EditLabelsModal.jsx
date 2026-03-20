@@ -4,7 +4,7 @@ import IconButton from "../Commons/IconButton";
 import { iconMap } from "../../utils/Icon";
 import { EDIT_LABELS_TEXT } from "@/src/utils/Constants";
 
-const LabelItem = ({ label, labels, setLabels }) => {
+const LabelItem = ({ label, labels, setLabels, onMergeRequest }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(label.name);
   const inputRef = useRef(null);
@@ -16,7 +16,9 @@ const LabelItem = ({ label, labels, setLabels }) => {
       setIsEditing(false);
       return;
     }
-    if (labels.find((l) => l.name === trimmed && l.id !== label.id)) {
+    const existingLabel = labels.find((l) => l.name === trimmed && l.id !== label.id);
+    if (existingLabel) {
+      onMergeRequest(label, existingLabel);
       setEditValue(label.name);
       setIsEditing(false);
       return;
@@ -97,9 +99,17 @@ const LabelItem = ({ label, labels, setLabels }) => {
   );
 };
 
-const EditLabelsModal = ({ isOpen, onClose, labels, setLabels }) => {
+const EditLabelsModal = ({ isOpen, onClose, labels, setLabels, onMergeLabels }) => {
   const [newLabelName, setNewLabelName] = useState("");
   const [error, setError] = useState("");
+  const [mergeTarget, setMergeTarget] = useState(null);
+
+  const confirmMerge = () => {
+    if (mergeTarget && onMergeLabels) {
+      onMergeLabels(mergeTarget.oldLabel.id, mergeTarget.newLabel.id);
+    }
+    setMergeTarget(null);
+  };
 
   const handleAddLabel = () => {
     const trimmed = newLabelName.trim();
@@ -115,7 +125,7 @@ const EditLabelsModal = ({ isOpen, onClose, labels, setLabels }) => {
   };
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose} title={EDIT_LABELS_TEXT.TITLE}>
+    <BaseModal isOpen={isOpen} onClose={onClose} title={EDIT_LABELS_TEXT.TITLE} scrollable={false}>
       <div className="flex items-center h-10 mb-2 group px-1">
         <IconButton
           icon={newLabelName ? iconMap.close : iconMap.plus}
@@ -153,11 +163,29 @@ const EditLabelsModal = ({ isOpen, onClose, labels, setLabels }) => {
         <p className="text-red-500 text-[11px] ml-11 mb-2 italic">{error}</p>
       )}
 
-      <div className="max-h-80 overflow-y-auto custom-scrollbar">
+      <div className="mt-2">
         {labels.map((label) => (
-          <LabelItem key={label.id} label={label} labels={labels} setLabels={setLabels} />
+          <LabelItem key={label.id} label={label} labels={labels} setLabels={setLabels} onMergeRequest={(oldL, newL) => setMergeTarget({ oldLabel: oldL, newLabel: newL })} />
         ))}
       </div>
+
+      {mergeTarget && (
+        <div className="fixed inset-0 z-[3000] flex items-center justify-center bg-black/50" onClick={() => setMergeTarget(null)}>
+          <div className="bg-white dark:bg-[#2d2e31] p-6 rounded-lg shadow-lg w-[32rem] max-w-[90vw] text-[#202124] dark:text-[#e8eaed]" onClick={(e) => e.stopPropagation()}>
+            <p className="mb-6 whitespace-pre-wrap text-base font-normal">
+              Hợp nhất nhãn "{mergeTarget.oldLabel.name}" với nhãn "{mergeTarget.newLabel.name}"? Tất cả các ghi chú được gắn nhãn "{mergeTarget.oldLabel.name}" sẽ được gắn nhãn "{mergeTarget.newLabel.name}" và nhãn "{mergeTarget.oldLabel.name}" sẽ bị xóa.
+            </p>
+            <div className="flex justify-end gap-2 mt-4">
+              <button onClick={() => setMergeTarget(null)} className="px-6 py-2 hover:bg-gray-100 dark:hover:bg-[#3c3c3c] rounded text-sm font-medium transition-colors">
+                Hủy
+              </button>
+              <button autoFocus onClick={confirmMerge} className="px-6 py-2 text-[#8ab4f8] hover:bg-blue-50 dark:hover:bg-[#3c3c3c] rounded text-sm font-medium transition-colors">
+                Hợp nhất
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </BaseModal>
   );
 };

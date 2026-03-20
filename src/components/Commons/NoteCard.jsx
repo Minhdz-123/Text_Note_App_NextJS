@@ -3,62 +3,35 @@ import { useState } from "react";
 import {
   NOTE_CARD_BUTTON,
   MORE_OPTION_MENU,
-  FORMAT_CONFIG,
   NOTE_PROPERTIES,
 } from "@/src/utils/Constants";
 import IconButton from "./IconButton";
 import Dropdown from "./Dropdown";
 import ColorPicker from "./ColorPicker";
-import TextFormatPicker from "./TextFormatPicker";
 import LabelSelectionDropdown from "./LabelSelectionDropdown";
 import { iconMap } from "@/src/utils/Icon";
-
-const getContentRender = (formats = []) => {
-  const ContentTag = formats.reduce((tag, format) => {
-    const config = FORMAT_CONFIG[format];
-    return config?.tag ?? tag;
-  }, "p");
-
-  const classes = formats
-    .reduce((result, format) => {
-      const config = FORMAT_CONFIG[format];
-      return config ? `${result} ${config.classes}` : result;
-    }, "")
-    .trim();
-
-  return { ContentTag, classes };
-};
 
 const NoteCard = ({
   note,
   onAction,
   onColorChange,
-  onFormatChange,
   labels = [],
   buttons = NOTE_CARD_BUTTON,
   className = "",
 }) => {
   const [showColorPicker, setShowColorPicker] = useState(false);
-  const [showFormatPicker, setShowFormatPicker] = useState(false);
   const [showLabelSelection, setShowLabelSelection] = useState(false);
 
-  const noteFormats = note[NOTE_PROPERTIES.FORMATS] || [];
   const noteLabels = note[NOTE_PROPERTIES.LABELS] || [];
   const bgColor = note[NOTE_PROPERTIES.COLOR_CLASS] || "bg-white";
   const isCustomColor = bgColor !== "bg-white" && bgColor !== "bg-transparent";
-  const { ContentTag, classes } = getContentRender(noteFormats);
 
   const handleCardClick = () => onAction?.("edit_note", note);
 
-  const popupToggles = {
-    choose_background: () => setShowColorPicker((prev) => !prev),
-    choose_format: () => setShowFormatPicker((prev) => !prev),
-  };
-
   const handleButtonClick = (e, action) => {
     e.stopPropagation();
-    if (popupToggles[action]) {
-      popupToggles[action]();
+    if (action === "choose_background") {
+      setShowColorPicker((prev) => !prev);
     } else {
       onAction?.(action, note);
     }
@@ -78,6 +51,8 @@ const NoteCard = ({
   };
 
   const renderButton = (item) => {
+    if (item.action === "choose_format") return null;
+
     const iconBtn = (
       <IconButton
         icon={iconMap[item.iconKey]}
@@ -100,23 +75,6 @@ const NoteCard = ({
                 setShowColorPicker(false);
               }}
               onClose={() => setShowColorPicker(false)}
-            />
-          )}
-        </div>
-      );
-    }
-
-    if (item.action === "choose_format") {
-      return (
-        <div key={item.id} className="relative">
-          {iconBtn}
-          {showFormatPicker && (
-            <TextFormatPicker
-              selectedFormats={noteFormats}
-              onFormatSelect={(formatType) =>
-                onFormatChange?.(note.id, formatType)
-              }
-              onClose={() => setShowFormatPicker(false)}
             />
           )}
         </div>
@@ -173,17 +131,15 @@ const NoteCard = ({
     >
       <div className="flex-1 p-4">
         {note.title && (
-          <h4 className="text-[20px] text-[#202124] dark:text-[#e8eaed] mb-1 wrap-break-word break-all">
+          <h4 className="text-[20px] text-[#202124] dark:text-[#e8eaed] mb-1 wrap-break-word break-all font-medium">
             {note.title}
           </h4>
         )}
-        <ContentTag
-          className={`text-[#202124] dark:text-[#e8eaed] whitespace-pre-wrap wrap-break-word break-all${
-            classes ? ` ${classes}` : ""
-          }`}
-        >
-          {note.content}
-        </ContentTag>
+
+        <div
+          className="text-[#202124] dark:text-[#e8eaed] text-[14px] whitespace-pre-wrap break-all"
+          dangerouslySetInnerHTML={{ __html: note.content }}
+        />
 
         {noteLabels.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-3">
@@ -192,7 +148,7 @@ const NoteCard = ({
               return label ? (
                 <span
                   key={labelId}
-                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-200 dark:bg-[#5f6368] text-[#202124] dark:text-[#e8eaed]"
+                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-black/5 dark:bg-[#5f6368] text-[#202124] dark:text-[#e8eaed]"
                 >
                   {label.name}
                 </span>
@@ -207,7 +163,7 @@ const NoteCard = ({
           relative flex justify-center gap-1 px-2 py-2 border-t border-[#e0e0e0] dark:border-[#5f6368] 
           transition-opacity duration-200
           ${
-            showColorPicker || showFormatPicker || showLabelSelection
+            showColorPicker || showLabelSelection
               ? "opacity-100"
               : "opacity-0 group-hover:opacity-100"
           }

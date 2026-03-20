@@ -6,7 +6,7 @@ import useNotes from "@/src/hooks/useNotes";
 import NoteCard from "@/src/components/Commons/NoteCard";
 import { useSearch } from "@/src/context/SearchContext";
 import EditNoteModal from "@/src/components/Modals/EditNoteModal";
-import useLocalStorage from "@/src/hooks/useLocalStorage";
+import { useSelector } from "react-redux";
 import { usePageTitle } from "@/src/context/PageTitleContext";
 import { NOTE_PROPERTIES, ARCHIVE_CARD_BUTTON } from "@/src/utils/Constants";
 import useNoteUI from "@/src/hooks/useNoteUI";
@@ -24,7 +24,7 @@ export default function LabelPage() {
     changeNoteFormat,
   } = noteActions;
   const { searchTerm } = useSearch();
-  const [labels] = useLocalStorage("keep_labels", []);
+  const labels = useSelector((state) => state.note.labels);
 
   const {
     editModalOpen,
@@ -60,6 +60,7 @@ export default function LabelPage() {
   }, [archived, label]);
 
   const filteredNotes = useMemo(() => {
+    if (!searchTerm) return labeledNotes;
     const term = searchTerm.toLowerCase();
     return labeledNotes.filter((note) => {
       return (
@@ -70,6 +71,7 @@ export default function LabelPage() {
   }, [labeledNotes, searchTerm]);
 
   const filteredArchived = useMemo(() => {
+    if (!searchTerm) return labeledArchived;
     const term = searchTerm.toLowerCase();
     return labeledArchived.filter((note) => {
       return (
