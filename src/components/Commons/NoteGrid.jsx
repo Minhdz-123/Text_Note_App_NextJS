@@ -20,7 +20,7 @@ import { useState } from "react";
 import SortableNoteCard from "@/src/components/Commons/SortableNotecard";
 import NoteCard from "@/src/components/Commons/NoteCard";
 import EditNoteModal from "@/src/components/Modals/EditNoteModal";
-import useLocalStorage from "@/src/hooks/useLocalStorage";
+import { useSelector } from "react-redux";
 import useNoteUI from "@/src/hooks/useNoteUI";
 
 export default function NoteGrid({
@@ -32,7 +32,7 @@ export default function NoteGrid({
 }) {
   const { editNote, changeNoteColor, changeNoteFormat, reorderNotes } =
     noteActions;
-  const [labels] = useLocalStorage("keep_labels", []);
+  const labels = useSelector((state) => state.note.labels);
   const [activeNote, setActiveNote] = useState(null);
 
   const { editModalOpen, setEditModalOpen, noteToEdit, handleAction } =

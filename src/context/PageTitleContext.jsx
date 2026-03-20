@@ -1,15 +1,16 @@
 "use client";
-import { createContext, useContext, useState } from "react";
-
-const PageTitleContext = createContext();
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setPageTitle } from "@/src/redux/uiSlice";
 
 export const PageTitleProvider = ({ children }) => {
-  const [pageTitle, setPageTitle] = useState(null);
-  return (
-    <PageTitleContext.Provider value={{ pageTitle, setPageTitle }}>
-      {children}
-    </PageTitleContext.Provider>
-  );
+  return <>{children}</>;
 };
 
-export const usePageTitle = () => useContext(PageTitleContext);
+export const usePageTitle = () => {
+  const dispatch = useDispatch();
+  const pageTitle = useSelector(state => state.ui?.pageTitle || "");
+  const setTitle = title => dispatch(setPageTitle(title));
+
+  return { pageTitle, setPageTitle: setTitle };
+};

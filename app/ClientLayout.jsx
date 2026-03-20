@@ -1,34 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../src/components/AppBar/Navbar";
 import Sidebar from "../src/components/AppBar/Sidebar";
-import useLocalStorage from "@/src/hooks/useLocalStorage";
 import EditLabelsModal from "@/src/components/Modals/EditLabelsModal";
 import ShortcutModal from "@/src/components/Modals/ShortcutModal";
 import { SearchProvider } from "@/src/context/SearchContext";
 import { PageTitleProvider } from "@/src/context/PageTitleContext";
+import {
+  Provider as ReduxProvider,
+  useSelector,
+  useDispatch,
+} from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "@/src/redux/store";
+import { toggleSidebar } from "@/src/redux/uiSlice";
+import { setLabels, mergeLabels } from "@/src/redux/noteSlice";
 
-export default function ClientLayout({ children }) {
-  const [isSidebarOpen, setIsSidebarOpen, sidebarLoaded] = useLocalStorage(
-    "sidebar_open",
-    true,
-  );
-
-  const [labels, setLabels] = useLocalStorage("keep_labels", []);
+function LayoutContent({ children }) {
+  const dispatch = useDispatch();
+  const isSidebarOpen = useSelector((state) => state.ui.isSidebarOpen);
+  const labels = useSelector((state) => state.note.labels);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isShortcutModalOpen, setIsShortcutModalOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  const sidebarOpen = sidebarLoaded ? isSidebarOpen : false;
+  const handleToggleSidebar = () => dispatch(toggleSidebar());
+  const handleSetLabels = (newLabels) => dispatch(setLabels(newLabels));
+  const handleMergeLabels = (oldId, newId) => dispatch(mergeLabels({ oldLabelId: oldId, newLabelId: newId }));
+
+  const sidebarOpen = mounted ? isSidebarOpen : false;
 
   return (
-    <PageTitleProvider>
-    <SearchProvider>
+    <>
       <Navbar
-        onToggleSidebar={toggleSidebar}
+        onToggleSidebar={handleToggleSidebar}
         onOpenShortcutModal={() => setIsShortcutModalOpen(true)}
       />
 
@@ -52,14 +63,28 @@ export default function ClientLayout({ children }) {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         labels={labels}
-        setLabels={setLabels}
+        setLabels={handleSetLabels}
+        onMergeLabels={handleMergeLabels}
       />
 
       <ShortcutModal
         isOpen={isShortcutModalOpen}
         onClose={() => setIsShortcutModalOpen(false)}
       />
-    </SearchProvider>
-    </PageTitleProvider>
+    </>
+  );
+}
+
+export default function ClientLayout({ children }) {
+  return (
+    <ReduxProvider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <PageTitleProvider>
+          <SearchProvider>
+            <LayoutContent>{children}</LayoutContent>
+          </SearchProvider>
+        </PageTitleProvider>
+      </PersistGate>
+    </ReduxProvider>
   );
 }

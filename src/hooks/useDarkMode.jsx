@@ -1,8 +1,10 @@
 import { useEffect } from "react";
-import useLocalStorage from "./useLocalStorage";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleDarkMode } from "@/src/redux/uiSlice";
 
 const useDarkMode = () => {
-  const [isDark, setIsDark] = useLocalStorage("dark_mode", false);
+  const dispatch = useDispatch();
+  const isDark = useSelector((state) => state.ui.isDarkMode);
 
   useEffect(() => {
     if (isDark) {
@@ -12,7 +14,7 @@ const useDarkMode = () => {
     }
   }, [isDark]);
 
-  const toggleDark = () => setIsDark((prev) => !prev);
+  const toggleDark = () => dispatch(toggleDarkMode());
 
   return { isDark, toggleDark };
 };

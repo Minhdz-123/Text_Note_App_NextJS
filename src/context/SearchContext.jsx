@@ -1,15 +1,16 @@
 "use client";
-import { createContext, useContext, useState } from "react";
-
-const SearchContext = createContext();
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setSearchTerm } from "@/src/redux/uiSlice";
 
 export const SearchProvider = ({ children }) => {
-  const [searchTerm, setSearchTerm] = useState("");
-  return (
-    <SearchContext.Provider value={{ searchTerm, setSearchTerm }}>
-      {children}
-    </SearchContext.Provider>
-  );
+  return <>{children}</>;
 };
 
-export const useSearch = () => useContext(SearchContext);
+export const useSearch = () => {
+  const dispatch = useDispatch();
+  const searchTerm = useSelector((state) => state.ui?.searchTerm || "");
+  const setTerm = (term) => dispatch(setSearchTerm(term));
+
+  return { searchTerm, setSearchTerm: setTerm };
+};
