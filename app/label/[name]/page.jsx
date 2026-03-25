@@ -3,7 +3,7 @@
 import { useMemo, useEffect } from "react";
 import { useParams } from "next/navigation";
 import useNotes from "@/src/hooks/useNotes";
-import NoteCard from "@/src/components/Commons/NoteCard";
+import NoteCard from "@/src/components/features/notes/NoteCard";
 import { useSearch } from "@/src/context/SearchContext";
 import EditNoteModal from "@/src/components/Modals/EditNoteModal";
 import { useSelector } from "react-redux";

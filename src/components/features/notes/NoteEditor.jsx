@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import { EditorContent } from "@tiptap/react";
 import useTiptapEditor from "@/src/hooks/useTiptapEditor";
-import TiptapToolbar from "./TiptapToolbar";
-import IconButton from "./IconButton";
+import TiptapToolbar from "../../Commons/TiptapToolbar";
+import IconButton from "../../Commons/IconButton";
 import { iconMap } from "@/src/utils/Icon";
-import ColorPicker from "./ColorPicker";
+import ColorPicker from "../../Commons/ColorPicker";
 import { NOTE_PROPERTIES, EDIT_NOTE_TEXT } from "@/src/utils/Constants";
 
 const NoteEditor = ({

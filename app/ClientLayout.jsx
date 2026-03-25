@@ -16,8 +16,10 @@ import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "@/src/redux/store";
 import { toggleSidebar } from "@/src/redux/uiSlice";
 import { setLabels, mergeLabels } from "@/src/redux/noteSlice";
+import { useFirebaseSync } from "@/src/hooks/useFirebaseSync";
 
 function LayoutContent({ children }) {
+  useFirebaseSync();
   const dispatch = useDispatch();
   const isSidebarOpen = useSelector((state) => state.ui.isSidebarOpen);
   const labels = useSelector((state) => state.note.labels);

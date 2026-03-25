@@ -1,10 +1,10 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-import TextInput from "./TextInput";
+import TextInput from "../../Commons/TextInput";
 import NoteEditor from "./NoteEditor";
 import { NOTE_BOX_BUTTON } from "@/src/utils/Constants";
-import IconButton from "./IconButton";
-import { iconMap } from "../../utils/Icon";
+import IconButton from "../../Commons/IconButton";
+import { iconMap } from "@/src/utils/Icon";
 
 function NoteBox({ onAddNote }) {
   const [isExpanded, setIsExpanded] = useState(false);

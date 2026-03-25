@@ -1,4 +1,4 @@
-import { validateIcon } from "@/src/hooks/validateIcon";
+import { validateIcon } from "@/src/utils/validateIcon";
 import { iconMap } from "./Icon";
 
 export const SIDEBAR_MENU = [

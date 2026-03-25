@@ -5,10 +5,10 @@ import {
   MORE_OPTION_MENU,
   NOTE_PROPERTIES,
 } from "@/src/utils/Constants";
-import IconButton from "./IconButton";
-import Dropdown from "./Dropdown";
-import ColorPicker from "./ColorPicker";
-import LabelSelectionDropdown from "./LabelSelectionDropdown";
+import IconButton from "@/src/components/Commons/IconButton";
+import Dropdown from "@/src/components/Commons/Dropdown";
+import ColorPicker from "@/src/components/Commons/ColorPicker";
+import LabelSelectionDropdown from "../labels/LabelSelectionDropdown";
 import { iconMap } from "@/src/utils/Icon";
 
 const NoteCard = ({

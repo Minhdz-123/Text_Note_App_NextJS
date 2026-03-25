@@ -1,7 +1,15 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 
-const IconButton = ({ icon, title, onClick, className = "", size = "w-10 h-10", textClass = "text-xl" }) => {
+const IconButton = ({
+  icon,
+  title,
+  onClick,
+  className = "",
+  size = "w-10 h-10",
+  textClass = "text-xl",
+  disabled = false,
+}) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   if (!icon) {
@@ -11,10 +19,15 @@ const IconButton = ({ icon, title, onClick, className = "", size = "w-10 h-10", 
   return (
     <div className="relative flex items-center justify-center">
       <button
-        onClick={onClick}
+        onClick={!disabled ? onClick : undefined}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
-        className={`${size} rounded-full flex items-center justify-center hover:bg-gray-200/50 dark:hover:bg-[#3c3c3c] text-[#5f6368] dark:text-[#9aa0a6] transition-colors duration-200 outline-none ${className}`}
+        disabled={disabled}
+        className={`${size} rounded-full flex items-center justify-center ${
+          disabled
+            ? "cursor-not-allowed opacity-50"
+            : "hover:bg-gray-200/50 dark:hover:bg-[#3c3c3c]"
+        } text-[#5f6368] dark:text-[#9aa0a6] transition-colors duration-200 outline-none ${className}`}
       >
         {icon ? <FontAwesomeIcon icon={icon} className={textClass} /> : null}
       </button>
