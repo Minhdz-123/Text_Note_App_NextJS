@@ -18,6 +18,7 @@ const Navbar = ({ onToggleSidebar, onOpenShortcutModal }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.userInfo);
   const status = useSelector((state) => state.user.status);
+  const syncStatus = useSelector((state) => state.note.syncStatus);
 
   const actionHandlers = {
     dark_mode: toggleDark,
@@ -80,6 +81,31 @@ const Navbar = ({ onToggleSidebar, onOpenShortcutModal }) => {
               />
             );
           }
+
+          if (item.action === "refresh") {
+            let iconClass = "";
+            let title = item.title;
+            if (syncStatus === "syncing") {
+              iconClass = "animate-spin text-blue-500";
+              title = "Đang đồng bộ...";
+            } else if (syncStatus === "synced") {
+              title = "Đã đồng bộ với Cloud";
+            } else if (syncStatus === "error") {
+              iconClass = "text-red-500";
+              title = "Lỗi đồng bộ (Ngoại tuyến)";
+            }
+
+            return (
+              <IconButton
+                key={item.id}
+                icon={iconMap[item.iconKey]}
+                title={title}
+                className={iconClass}
+                onClick={() => window.location.reload()}
+              />
+            );
+          }
+
           return (
             <IconButton
               key={item.id}

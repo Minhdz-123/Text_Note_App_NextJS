@@ -11,9 +11,9 @@ const getInitialState = () => {
       JSON.parse(window.localStorage.getItem("keep_archived")) || [];
     const trash = JSON.parse(window.localStorage.getItem("keep_trash")) || [];
     const labels = JSON.parse(window.localStorage.getItem("keep_labels")) || [];
-    return { notes, archived, trash, labels };
+    return { notes, archived, trash, labels, syncStatus: "synced" };
   } catch (e) {
-    return { notes: [], archived: [], trash: [], labels: [] };
+    return { notes: [], archived: [], trash: [], labels: [], syncStatus: "synced" };
   }
 };
 
@@ -248,6 +248,9 @@ const noteSlice = createSlice({
       if (trash) state.trash = trash;
       if (labels) state.labels = labels;
     },
+    setSyncStatus: (state, action) => {
+      state.syncStatus = action.payload;
+    },
   },
 });
 
@@ -268,6 +271,7 @@ export const {
   setLabels,
   cleanDuplicateData,
   setAllData,
+  setSyncStatus,
 } = noteSlice.actions;
 
 export default noteSlice.reducer;

@@ -4,7 +4,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { auth, db } from "@/src/lib/firebase";
 import { setUser, clearUser } from "@/src/redux/userSlice";
-import { setAllData } from "@/src/redux/noteSlice";
+import { setAllData, setSyncStatus } from "@/src/redux/noteSlice";
 
 export const useFirebaseSync = () => {
   const dispatch = useDispatch();
@@ -65,6 +65,7 @@ export const useFirebaseSync = () => {
 
     syncTimeoutRef.current = setTimeout(async () => {
       try {
+        dispatch(setSyncStatus("syncing"));
         await setDoc(doc(db, "users", user.uid), {
           notes: noteState.notes,
           archived: noteState.archived,
@@ -72,11 +73,13 @@ export const useFirebaseSync = () => {
           labels: noteState.labels,
           lastUpdated: Date.now(),
         });
+        dispatch(setSyncStatus("synced"));
         console.log("Data synced to Firestore successfully");
       } catch (error) {
+        dispatch(setSyncStatus("error"));
         console.error("Error syncing data to Firestore:", error);
       }
-    }, 2000); 
+    }, 2000);
 
     return () => {
       if (syncTimeoutRef.current) clearTimeout(syncTimeoutRef.current);
