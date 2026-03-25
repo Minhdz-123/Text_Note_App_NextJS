@@ -1,8 +1,8 @@
 "use client";
 
 import useNotes from "@/src/hooks/useNotes";
-import NoteBox from "@/src/components/Commons/NoteBox";
-import NoteGrid from "@/src/components/Commons/NoteGrid";
+import NoteBox from "@/src/components/features/notes/NoteBox";
+import NoteGrid from "@/src/components/features/notes/NoteGrid";
 import useFilteredNotes from "@/src/hooks/useFilteredNotes";
 
 export default function HomePage() {
@@ -13,11 +13,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col w-full min-h-screen p-4 gap-4">
       <NoteBox onAddNote={addNote} />
-      <NoteGrid
-        notes={filteredNotes}
-        noteActions={noteActions}
-        sortable
-      />
+      <NoteGrid notes={filteredNotes} noteActions={noteActions} sortable />
     </div>
   );
 }

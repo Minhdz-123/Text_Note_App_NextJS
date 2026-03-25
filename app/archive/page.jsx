@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import useNotes from "@/src/hooks/useNotes";
-import NoteGrid from "@/src/components/Commons/NoteGrid";
+import NoteGrid from "@/src/components/features/notes/NoteGrid";
 import useFilteredNotes from "@/src/hooks/useFilteredNotes";
 import { ARCHIVE_CARD_BUTTON } from "@/src/utils/Constants";
 import { usePageTitle } from "@/src/context/PageTitleContext";

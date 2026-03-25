@@ -1,8 +1,18 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import noteReducer from "./noteSlice";
 import uiReducer from "./uiSlice";
+import userReducer from "./userSlice";
 
 const createNoopStorage = () => {
   return {
@@ -18,17 +28,22 @@ const createNoopStorage = () => {
   };
 };
 
-const storage = typeof window !== "undefined" ? createWebStorage("local") : createNoopStorage();
+const storage =
+  typeof window !== "undefined"
+    ? createWebStorage("local")
+    : createNoopStorage();
 
 const persistConfig = {
   key: "keep_redux_root",
   storage,
   whitelist: ["ui", "note"],
+  blacklist: ["user"],
 };
 
 const rootReducer = combineReducers({
   ui: uiReducer,
   note: noteReducer,
+  user: userReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

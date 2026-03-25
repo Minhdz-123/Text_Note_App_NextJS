@@ -2,7 +2,7 @@
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import NoteCard from "@/src/components/Commons/NoteCard";
+import NoteCard from "./NoteCard";
 
 export default function SortableNoteCard({
   note,

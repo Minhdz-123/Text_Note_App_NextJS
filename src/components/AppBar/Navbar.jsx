@@ -1,4 +1,6 @@
 "use client";
+import { useSelector, useDispatch } from "react-redux";
+import { LoginWithGoogle, Logout } from "@/src/redux/userSlice";
 import { NAVBAR_ACTIONS } from "@/src/utils/Constants";
 import { buildDropdownOptions } from "@/src/utils/buildDropdownOptions";
 import { iconMap } from "../../utils/Icon";
@@ -13,6 +15,9 @@ const Navbar = ({ onToggleSidebar, onOpenShortcutModal }) => {
   const { toggleDark } = useDarkMode();
   const { setSearchTerm } = useSearch();
   const { pageTitle } = usePageTitle();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.userInfo);
+  const status = useSelector((state) => state.user.status);
 
   const actionHandlers = {
     dark_mode: toggleDark,
@@ -84,6 +89,30 @@ const Navbar = ({ onToggleSidebar, onOpenShortcutModal }) => {
             />
           );
         })}
+
+        <div className="ml-4 pl-4 border-l border-gray-200 dark:border-gray-700">
+          {user ? (
+            <Dropdown
+              options={[
+                { id: "email", title: user.email, disabled: true },
+                { id: "logout", title: "Đăng xuất", onClick: () => dispatch(Logout()) },
+              ]}
+              trigger={
+                <button title={user.displayName} className="w-8 h-8 rounded-full overflow-hidden hover:opacity-80 transition-opacity">
+                  <img src={user.photoURL} alt={user.displayName} className="w-full h-full object-cover" />
+                </button>
+              }
+            />
+          ) : (
+            <IconButton
+              icon={iconMap.user || iconMap.ellipsis_vertical}
+              title="Đăng nhập"
+              onClick={() => dispatch(LoginWithGoogle())}
+              disabled={status === "loading"}
+              className={status === "loading" ? "opacity-50 cursor-not-allowed" : ""}
+            />
+          )}
+        </div>
       </div>
     </nav>
   );

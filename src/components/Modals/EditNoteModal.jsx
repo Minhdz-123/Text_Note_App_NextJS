@@ -1,4 +1,4 @@
-import NoteEditor from "../Commons/NoteEditor";
+import NoteEditor from "../features/notes/NoteEditor";
 import { NOTE_PROPERTIES } from "@/src/utils/Constants";
 import BaseModal from "../Commons/BaseModal";
 

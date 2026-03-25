@@ -17,8 +17,8 @@ import {
 } from "@dnd-kit/sortable";
 import { useState } from "react";
 
-import SortableNoteCard from "@/src/components/Commons/SortableNotecard";
-import NoteCard from "@/src/components/Commons/NoteCard";
+import SortableNoteCard from "./SortableNotecard";
+import NoteCard from "./NoteCard";
 import EditNoteModal from "@/src/components/Modals/EditNoteModal";
 import { useSelector } from "react-redux";
 import useNoteUI from "@/src/hooks/useNoteUI";

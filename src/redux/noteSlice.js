@@ -7,7 +7,8 @@ const getInitialState = () => {
   }
   try {
     const notes = JSON.parse(window.localStorage.getItem("keep_notes")) || [];
-    const archived = JSON.parse(window.localStorage.getItem("keep_archived")) || [];
+    const archived =
+      JSON.parse(window.localStorage.getItem("keep_archived")) || [];
     const trash = JSON.parse(window.localStorage.getItem("keep_trash")) || [];
     const labels = JSON.parse(window.localStorage.getItem("keep_labels")) || [];
     return { notes, archived, trash, labels };
@@ -33,23 +34,32 @@ const noteSlice = createSlice({
   initialState,
   reducers: {
     addNote: (state, action) => {
-      const data = typeof action.payload === "string" ? { content: action.payload } : action.payload;
+      const data =
+        typeof action.payload === "string"
+          ? { content: action.payload }
+          : action.payload;
       const newNote = { id: Date.now(), ...data };
       state.notes.unshift(newNote);
     },
     editNote: (state, action) => {
       const updatedNote = action.payload;
-      const indexInNotes = state.notes.findIndex((n) => n.id === updatedNote.id);
+      const indexInNotes = state.notes.findIndex(
+        (n) => n.id === updatedNote.id,
+      );
       if (indexInNotes !== -1) {
         state.notes[indexInNotes] = updatedNote;
         return;
       }
-      const indexInArchived = state.archived.findIndex((n) => n.id === updatedNote.id);
+      const indexInArchived = state.archived.findIndex(
+        (n) => n.id === updatedNote.id,
+      );
       if (indexInArchived !== -1) {
         state.archived[indexInArchived] = updatedNote;
         return;
       }
-      const indexInTrash = state.trash.findIndex((n) => n.id === updatedNote.id);
+      const indexInTrash = state.trash.findIndex(
+        (n) => n.id === updatedNote.id,
+      );
       if (indexInTrash !== -1) {
         state.trash[indexInTrash] = updatedNote;
       }
@@ -97,7 +107,9 @@ const noteSlice = createSlice({
       if (indexInNotes !== -1) {
         [note] = state.notes.splice(indexInNotes, 1);
       } else {
-        const indexInArchived = state.archived.findIndex((n) => n.id === noteId);
+        const indexInArchived = state.archived.findIndex(
+          (n) => n.id === noteId,
+        );
         if (indexInArchived !== -1) {
           [note] = state.archived.splice(indexInArchived, 1);
         }
@@ -122,13 +134,16 @@ const noteSlice = createSlice({
         const index = arr.findIndex((n) => n.id === noteId);
         if (index !== -1) {
           const note = arr[index];
-          if (!note[NOTE_PROPERTIES.FORMATS]) note[NOTE_PROPERTIES.FORMATS] = [];
+          if (!note[NOTE_PROPERTIES.FORMATS])
+            note[NOTE_PROPERTIES.FORMATS] = [];
           const isHeading = HEADING_TYPES.includes(formatType);
 
           if (formatType === "default") {
             note[NOTE_PROPERTIES.FORMATS] = [];
           } else if (note[NOTE_PROPERTIES.FORMATS].includes(formatType)) {
-            note[NOTE_PROPERTIES.FORMATS] = note[NOTE_PROPERTIES.FORMATS].filter((f) => f !== formatType);
+            note[NOTE_PROPERTIES.FORMATS] = note[
+              NOTE_PROPERTIES.FORMATS
+            ].filter((f) => f !== formatType);
           } else {
             let newFormats = [...note[NOTE_PROPERTIES.FORMATS]];
             if (isHeading) {
@@ -179,7 +194,9 @@ const noteSlice = createSlice({
         if (index !== -1) {
           const note = arr[index];
           if (note[NOTE_PROPERTIES.LABELS]) {
-            note[NOTE_PROPERTIES.LABELS] = note[NOTE_PROPERTIES.LABELS].filter((l) => l !== labelId);
+            note[NOTE_PROPERTIES.LABELS] = note[NOTE_PROPERTIES.LABELS].filter(
+              (l) => l !== labelId,
+            );
           }
           return true;
         }
@@ -200,7 +217,9 @@ const noteSlice = createSlice({
       const replaceLabel = (arr) => {
         arr.forEach((note) => {
           if (note[NOTE_PROPERTIES.LABELS]?.includes(oldLabelId)) {
-            note[NOTE_PROPERTIES.LABELS] = note[NOTE_PROPERTIES.LABELS].filter((l) => l !== oldLabelId);
+            note[NOTE_PROPERTIES.LABELS] = note[NOTE_PROPERTIES.LABELS].filter(
+              (l) => l !== oldLabelId,
+            );
             if (!note[NOTE_PROPERTIES.LABELS].includes(newLabelId)) {
               note[NOTE_PROPERTIES.LABELS].push(newLabelId);
             }
@@ -221,7 +240,14 @@ const noteSlice = createSlice({
       state.notes = deduplicate(state.notes);
       state.archived = deduplicate(state.archived);
       state.trash = deduplicate(state.trash);
-    }
+    },
+    setAllData: (state, action) => {
+      const { notes, archived, trash, labels } = action.payload;
+      if (notes) state.notes = notes;
+      if (archived) state.archived = archived;
+      if (trash) state.trash = trash;
+      if (labels) state.labels = labels;
+    },
   },
 });
 
@@ -240,7 +266,8 @@ export const {
   reorderNotes,
   mergeLabels,
   setLabels,
-  cleanDuplicateData
+  cleanDuplicateData,
+  setAllData,
 } = noteSlice.actions;
 
 export default noteSlice.reducer;
