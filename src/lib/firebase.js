@@ -16,22 +16,34 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Singleton initialization for Next.js/HMR
-export const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+// Safe initialization for Build Environment (SSR/Static Generation)
+let app;
+let auth;
+let db;
+let googleProvider;
 
-// Initialize DB with persistence once
-let firestoreDb;
-try {
-  firestoreDb = initializeFirestore(app, {
-    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
-  });
-} catch (e) {
-  firestoreDb = getFirestore(app);
+if (firebaseConfig.apiKey) {
+  app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  googleProvider = new GoogleAuthProvider();
+
+  // Initialize DB with persistence once
+  try {
+    db = initializeFirestore(app, {
+      localCache: persistentLocalCache({
+        tabManager: persistentMultipleTabManager(),
+      }),
+    });
+  } catch (e) {
+    db = getFirestore(app);
+  }
+} else {
+  // Mock objects or null for build time
+  console.warn("Firebase API Key missing. Skipping initialization (expected during build).");
 }
 
-export const db = firestoreDb;
+export { app, auth, db };
 export const providers = {
-  google: new GoogleAuthProvider(),
+  google: googleProvider,
 };
 export default firebaseConfig;
