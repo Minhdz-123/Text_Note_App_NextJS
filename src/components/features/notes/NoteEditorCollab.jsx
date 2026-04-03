@@ -88,6 +88,7 @@ const EditorWithProvider = ({
     ydoc,
     provider,
     initialContent,
+    collabProfile,
     yjsSnapshot: initialYjsSnapshot,
     onSaveDebounced: handleSaveDebounced,
     onCaptainElected: () => showToast(COLLAB_TEXT.CAPTAIN_ELECTED, "success"),

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { useEditor, mergeAttributes } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -8,6 +8,7 @@ import Heading from "@tiptap/extension-heading";
 import Bold from "@tiptap/extension-bold";
 import Italic from "@tiptap/extension-italic";
 import Collaboration from "@tiptap/extension-collaboration";
+import CollaborationCursor from "@tiptap/extension-collaboration-cursor";
 import * as Y from "yjs";
 import { FORMAT_CONFIG } from "@/src/utils/Constants";
 import { encodeSnapshot, isCaptain, getCaptainId } from "@/src/utils/Yjsutils";
@@ -47,6 +48,7 @@ export default function useCollabEditor({
   ydoc,
   provider,
   initialContent,
+  collabProfile,
   yjsSnapshot,
   onSaveDebounced,
   onCaptainElected,
@@ -57,25 +59,38 @@ export default function useCollabEditor({
   const [captainInfo, setCaptainInfo] = useState(null);
   const [onlineCount, setOnlineCount] = useState(1);
 
+  const extensions = useMemo(() => {
+    const baseExtensions = [
+      StarterKit.configure({
+        history: false,
+        heading: false,
+        bold: false,
+        italic: false,
+        strike: false,
+        code: false,
+        blockquote: false,
+      }),
+      CustomHeading.configure({ levels: [1, 2] }),
+      CustomBold,
+      CustomItalic,
+      CustomUnderline,
+    ];
+
+    if (ydoc && provider) {
+      baseExtensions.push(
+        Collaboration.configure({
+          document: ydoc,
+        })
+      );
+    }
+
+    return baseExtensions;
+  }, [ydoc, provider]);
+
   const editor = useEditor(
     {
       immediatelyRender: false,
-      extensions: [
-        StarterKit.configure({
-          history: false, 
-          heading: false,
-          bold: false,
-          italic: false,
-          strike: false,
-          code: false,
-          blockquote: false,
-        }),
-        CustomHeading.configure({ levels: [1, 2] }),
-        CustomBold,
-        CustomItalic,
-        CustomUnderline,
-        Collaboration.configure({ document: ydoc }),
-      ],
+      extensions,
       content: "",
       editorProps: {
         attributes: {
@@ -84,7 +99,7 @@ export default function useCollabEditor({
         },
       },
     },
-    [ydoc, provider]
+    [extensions]
   );
 
   useEffect(() => {
