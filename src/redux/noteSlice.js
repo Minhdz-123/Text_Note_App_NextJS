@@ -2,19 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { NOTE_PROPERTIES, HEADING_TYPES } from "@/src/utils/Constants";
 
 const getInitialState = () => {
-  if (typeof window === "undefined") {
-    return { notes: [], archived: [], trash: [], labels: [] };
-  }
-  try {
-    const notes = JSON.parse(window.localStorage.getItem("keep_notes")) || [];
-    const archived =
-      JSON.parse(window.localStorage.getItem("keep_archived")) || [];
-    const trash = JSON.parse(window.localStorage.getItem("keep_trash")) || [];
-    const labels = JSON.parse(window.localStorage.getItem("keep_labels")) || [];
-    return { notes, archived, trash, labels, syncStatus: "synced" };
-  } catch (e) {
-    return { notes: [], archived: [], trash: [], labels: [], syncStatus: "synced" };
-  }
+  return { notes: [], archived: [], trash: [], labels: [], lastUpdated: 0, syncStatus: "synced" };
 };
 
 const initialState = getInitialState();
@@ -38,8 +26,9 @@ const noteSlice = createSlice({
         typeof action.payload === "string"
           ? { content: action.payload }
           : action.payload;
-      const newNote = { id: Date.now(), ...data };
+      const newNote = { id: Date.now(), ...data, updatedAt: Date.now() };
       state.notes.unshift(newNote);
+      state.lastUpdated = Date.now();
     },
     editNote: (state, action) => {
       const updatedNote = action.payload;
@@ -63,6 +52,7 @@ const noteSlice = createSlice({
       if (indexInTrash !== -1) {
         state.trash[indexInTrash] = updatedNote;
       }
+      state.lastUpdated = Date.now();
     },
     changeNoteColor: (state, action) => {
       const { noteId, colorClass } = action.payload;
@@ -79,6 +69,7 @@ const noteSlice = createSlice({
           updateColor(state.trash);
         }
       }
+      state.lastUpdated = Date.now();
     },
     archiveNote: (state, action) => {
       const noteId = action.payload;
@@ -88,6 +79,7 @@ const noteSlice = createSlice({
         if (!state.archived.some((n) => n.id === noteId)) {
           state.archived.unshift(note);
         }
+        state.lastUpdated = Date.now();
       }
     },
     restoreNote: (state, action) => {
@@ -98,6 +90,7 @@ const noteSlice = createSlice({
         if (!state.notes.some((n) => n.id === noteId)) {
           state.notes.unshift(note);
         }
+        state.lastUpdated = Date.now();
       }
     },
     moveToTrash: (state, action) => {
@@ -117,6 +110,7 @@ const noteSlice = createSlice({
       if (note && !state.trash.some((n) => n.id === noteId)) {
         state.trash.unshift(note);
       }
+      state.lastUpdated = Date.now();
     },
     restoreFromTrash: (state, action) => {
       const noteId = action.payload;
@@ -126,6 +120,7 @@ const noteSlice = createSlice({
         if (!state.notes.some((n) => n.id === noteId)) {
           state.notes.unshift(note);
         }
+        state.lastUpdated = Date.now();
       }
     },
     changeNoteFormat: (state, action) => {
@@ -162,10 +157,12 @@ const noteSlice = createSlice({
           updateFormat(state.trash);
         }
       }
+      state.lastUpdated = Date.now();
     },
     deleteNote: (state, action) => {
       const noteId = action.payload;
       state.trash = state.trash.filter((n) => n.id !== noteId);
+      state.lastUpdated = Date.now();
     },
     addLabelToNote: (state, action) => {
       const { noteId, labelId } = action.payload;
@@ -186,6 +183,7 @@ const noteSlice = createSlice({
           addLabel(state.trash);
         }
       }
+      state.lastUpdated = Date.now();
     },
     removeLabelFromNote: (state, action) => {
       const { noteId, labelId } = action.payload;
@@ -207,9 +205,11 @@ const noteSlice = createSlice({
           removeLabel(state.trash);
         }
       }
+      state.lastUpdated = Date.now();
     },
     reorderNotes: (state, action) => {
       state.notes = action.payload;
+      state.lastUpdated = Date.now();
     },
     mergeLabels: (state, action) => {
       const { oldLabelId, newLabelId } = action.payload;
@@ -232,21 +232,25 @@ const noteSlice = createSlice({
       replaceLabel(state.trash);
 
       state.labels = state.labels.filter((l) => l.id !== oldLabelId);
+      state.lastUpdated = Date.now();
     },
     setLabels: (state, action) => {
       state.labels = action.payload;
+      state.lastUpdated = Date.now();
     },
     cleanDuplicateData: (state) => {
       state.notes = deduplicate(state.notes);
       state.archived = deduplicate(state.archived);
       state.trash = deduplicate(state.trash);
+      state.lastUpdated = Date.now();
     },
     setAllData: (state, action) => {
-      const { notes, archived, trash, labels } = action.payload;
+      const { notes, archived, trash, labels, lastUpdated } = action.payload;
       if (notes) state.notes = notes;
       if (archived) state.archived = archived;
       if (trash) state.trash = trash;
       if (labels) state.labels = labels;
+      if (lastUpdated) state.lastUpdated = lastUpdated;
     },
     setSyncStatus: (state, action) => {
       state.syncStatus = action.payload;

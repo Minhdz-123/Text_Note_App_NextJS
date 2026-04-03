@@ -5,6 +5,7 @@ import Navbar from "../src/components/AppBar/Navbar";
 import Sidebar from "../src/components/AppBar/Sidebar";
 import EditLabelsModal from "@/src/components/Modals/EditLabelsModal";
 import ShortcutModal from "@/src/components/Modals/ShortcutModal";
+import { usePathname } from "next/navigation";
 import { SearchProvider } from "@/src/context/SearchContext";
 import { PageTitleProvider } from "@/src/context/PageTitleContext";
 import {
@@ -21,6 +22,9 @@ import { useFirebaseSync } from "@/src/hooks/useFirebaseSync";
 function LayoutContent({ children }) {
   useFirebaseSync();
   const dispatch = useDispatch();
+  const pathname = usePathname();
+  const isSharePage = pathname?.startsWith("/share/");
+  
   const isSidebarOpen = useSelector((state) => state.ui.isSidebarOpen);
   const labels = useSelector((state) => state.note.labels);
 
@@ -37,6 +41,10 @@ function LayoutContent({ children }) {
   const handleMergeLabels = (oldId, newId) => dispatch(mergeLabels({ oldLabelId: oldId, newLabelId: newId }));
 
   const sidebarOpen = mounted ? isSidebarOpen : false;
+
+  if (isSharePage) {
+    return <main className="min-h-screen bg-white dark:bg-[#202124]">{children}</main>;
+  }
 
   return (
     <>

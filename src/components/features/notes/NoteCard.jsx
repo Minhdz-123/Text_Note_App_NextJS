@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import ShareModal from "../../Modals/ShareModal";
 import {
   NOTE_CARD_BUTTON,
   MORE_OPTION_MENU,
@@ -21,6 +23,8 @@ const NoteCard = ({
 }) => {
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [showLabelSelection, setShowLabelSelection] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const userInfo = useSelector((state) => state.user.userInfo);
 
   const noteLabels = note[NOTE_PROPERTIES.LABELS] || [];
   const bgColor = note[NOTE_PROPERTIES.COLOR_CLASS] || "bg-white";
@@ -40,6 +44,8 @@ const NoteCard = ({
   const handleMoreOptionClick = (action) => {
     if (action === "add_labels") {
       setShowLabelSelection(true);
+    } else if (action === "share_note") {
+      setShowShareModal(true);
     } else {
       onAction?.(action, note);
     }
@@ -184,6 +190,18 @@ const NoteCard = ({
         )}
         {buttons.map(renderButton)}
       </div>
+
+      {showShareModal && (
+        <ShareModal
+          note={note}
+          ownerUid={userInfo?.uid}
+          isOpen={showShareModal}
+          onClose={() => setShowShareModal(false)}
+          onUpdateNote={(updatedNote) => {
+            onAction?.("update_note", updatedNote);
+          }}
+        />
+      )}
     </div>
   );
 };

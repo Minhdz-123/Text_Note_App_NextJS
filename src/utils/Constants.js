@@ -7,6 +7,7 @@ export const SIDEBAR_MENU = [
   { id: 3, label: "Chỉnh sửa nhãn", action: "edit_labels", iconKey: "pen" },
   { id: 4, label: "Lưu trữ", path: "/archive", iconKey: "archive" },
   { id: 5, label: "Thùng rác", path: "/trash", iconKey: "trash" },
+  { id: 6, label: "Lời mời", path: "/test-collaboration/invitations", iconKey: "userPlus" },
 ];
 
 export const NAVBAR_ACTIONS = [
@@ -82,6 +83,14 @@ export const EDIT_NOTE_TEXT = {
   TIMESTAMP_PREFIX: "Đã gửi vào",
 };
 
+export const SHARE_NOTE_TEXT = {
+  TITLE: "Chia sẻ ghi chú",
+  TOGGLE_LABEL: "Chia sẻ công khai",
+  COPY_BUTTON: "Sao chép liên kết",
+  COPIED_SUCCESS: "Đã sao chép liên kết!",
+  CLOSE_BUTTON: "Đóng",
+};
+
 export const SHORTCUT_MODAL_TEXT = {
   TITLE: "Phím tắt",
   TOOLTIP_CLOSE: "Đóng",
@@ -108,6 +117,7 @@ export const NOTE_CARD_BUTTON = [
     iconKey: "ellipsis_vertical",
     action: "more_option",
   },
+  { id: 5, title: "Chia sẻ", iconKey: "share", action: "share_note" },
 ];
 
 export const ARCHIVE_CARD_BUTTON = [
@@ -131,6 +141,7 @@ export const ARCHIVE_CARD_BUTTON = [
     iconKey: "ellipsis_vertical",
     action: "more_option",
   },
+  { id: 5, title: "Chia sẻ", iconKey: "share", action: "share_note" },
 ];
 
 export const TRASH_CARD_BUTTON = [
@@ -235,6 +246,35 @@ export const NOTE_PROPERTIES = {
   FORMATS: "formats",
   COLOR_CLASS: "colorClass",
   LABELS: "labels",
+};
+
+export const COLLAB_TEXT = {
+  CAPTAIN_BADGE: "Captain",
+  CAPTAIN_ELECTED:
+    "Bạn đã được bầu làm Captain — dữ liệu sẽ được đồng bộ qua bạn",
+  CAPTAIN_LEFT:
+    "Captain đã rời phòng — có thể có thay đổi chưa được lưu",
+  SYNCING_BY: "Đồng bộ bởi",
+  ONLINE_SUFFIX: "người đang xem",
+  CONNECTING_ROOM: "Đang kết nối phòng...",
+  DEFAULT_USER_NAME: "Anonymous",
+  CLOSE_BUTTON: "Đóng",
+};
+
+export const INVITATION_TEXT = {
+  TITLE: "Gửi lời mời cộng tác",
+  PLACEHOLDER_EMAIL: "Nhập email cộng tác viên...",
+  BUTTON_SEND: "Gửi mời",
+  SUCCESS_SENT: "Đã gửi lời mời thành công!",
+  ERROR_NOT_FOUND: "Không tìm thấy người dùng với email này.",
+  ERROR_SELF: "Bạn không thể tự mời chính mình.",
+  ERROR_GENERIC: "Lỗi gửi lời mời.",
+  ERROR_ALREADY_INVITED: "Bạn đã gửi lời mời cho người dùng này rồi.",
+  SIDEBAR_TITLE: "Lời mời",
+  EMPTY: "Chưa có lời mời",
+  ACCEPT: "Chấp nhận",
+  DECLINE: "Từ chối",
+  ACCEPTED_MSG: "Tham gia phòng!",
 };
 
 validateIcon(iconMap, [

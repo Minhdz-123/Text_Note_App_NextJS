@@ -127,6 +127,7 @@ export default function NoteGrid({
           isOpen={editModalOpen}
           note={noteToEdit}
           onClose={() => setEditModalOpen(false)}
+          onAction={handleAction}
           onSave={(updated) => {
             editNote(updated);
             setEditModalOpen(false);
