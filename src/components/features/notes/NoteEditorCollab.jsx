@@ -303,7 +303,6 @@ const NoteEditorCollab = (props) => {
     const roomName = `note-room-${props.noteId}`;
     console.log(`[Collab] Joining room: ${roomName} | isOwner: ${collabProfile.isOwner}`);
 
-    // Configuration for WebRTC peers to traverse NAT/Firewalls
     const peerOpts = {
       iceServers: [
         { urls: "stun:stun.l.google.com:19302" },

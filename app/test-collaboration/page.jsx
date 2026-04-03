@@ -21,14 +21,12 @@ export default function TestCollaborationPage() {
   const selectedNote = notes.find((n) => n.id === selectedNoteId);
   const { updateSharedNote } = useNoteShare();
 
-  // FIREBASE FALLBACK: Listen to shared note updates if WebRTC is blocked
   useEffect(() => {
     if (!selectedNote?.shareId) return;
 
     const unsubscribe = onSnapshot(doc(db, "sharedNotes", selectedNote.shareId), (docSnap) => {
       if (docSnap.exists()) {
         const remoteData = docSnap.data();
-        // Only update if remote data is newer (prevent infinite loops)
         if (remoteData.updatedAt > (selectedNote.updatedAt || 0) && remoteData.lastEditorUid !== user?.uid) {
            dispatch(editNote({ 
              ...selectedNote, 
