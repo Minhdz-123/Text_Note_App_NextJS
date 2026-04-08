@@ -16,17 +16,17 @@ const UserMenu = () => {
   if (!userInfo) {
     return (
       <IconButton
-        icon={iconMap.google} // Đảm bảo bạn có icon Google trong iconMap
+        icon={iconMap.google} 
         title="Đăng nhập với Google"
         onClick={() => dispatch(loginWithGoogle())}
         className="text-[#202124] dark:text-[#e8eaed] p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/5"
         size="w-10 h-10"
-        loading={status === "loading"} // Hiện loading nếu đang đăng nhập
+        loading={status === "loading"} 
       />
     );
   }
 
-  // Cấu hình các tùy chọn cho Dropdown Menu
+
   const userOptions = [
     {
       label: "Đăng xuất",
@@ -41,7 +41,6 @@ const UserMenu = () => {
         width="200px"
         right="0"
         trigger={
-          // Dùng chính Avatar của người dùng làm nút bấm
           <img
             src={userInfo.photoURL}
             alt={userInfo.displayName}

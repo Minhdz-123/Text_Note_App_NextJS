@@ -11,6 +11,7 @@ export default function useNoteUI(actions = {}) {
     removeLabelFromNote,
     restoreFromTrash,
     deleteNote,
+    editNote,
   } = actions;
 
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -42,6 +43,10 @@ export default function useNoteUI(actions = {}) {
         break;
       case "delete_permanently":
         deleteNote(note.id);
+        break;
+      case "update_note":
+        editNote(note);
+        setNoteToEdit((prev) => (prev?.id === note.id ? note : prev));
         break;
       default:
         console.warn(`Unknown action: ${action}`);

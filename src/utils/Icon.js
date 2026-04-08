@@ -30,6 +30,11 @@ import {
   faUnderline,
   faHeading,
   faEraser,
+  faShareNodes,
+  faCrown,
+  faExclamationTriangle,
+  faUserPlus,
+  faPaperPlane,
 } from "@fortawesome/free-solid-svg-icons";
 
 export const iconMap = {
@@ -69,4 +74,9 @@ export const iconMap = {
   italic: faItalic,
   underline: faUnderline,
   clearFormat: faEraser,
+  share: faShareNodes,
+  crown: faCrown,
+  warning: faExclamationTriangle,
+  userPlus: faUserPlus,
+  send: faPaperPlane,
 };

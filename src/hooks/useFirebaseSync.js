@@ -9,7 +9,7 @@ import { setAllData, setSyncStatus } from "@/src/redux/noteSlice";
 export const useFirebaseSync = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.userInfo);
-  const noteState = useSelector((state) => state.note);
+  const { notes, archived, trash, labels } = useSelector((state) => state.note);
   const isInitialMount = useRef(true);
   const syncTimeoutRef = useRef(null);
 
@@ -34,7 +34,16 @@ export const useFirebaseSync = () => {
 
           if (docSnap.exists()) {
             const data = docSnap.data();
-            dispatch(setAllData(data));
+
+
+            const isLocalEmpty = notes.length === 0 && labels.length === 0;
+
+            if (isLocalEmpty) {
+              console.log("Local state empty, loading from Firestore");
+              dispatch(setAllData(data));
+            } else {
+              console.log("Local state already has data, skipping initial Firestore overwrite");
+            }
           }
         } catch (error) {
           if (error.code === 'unavailable' || error.message.includes('offline')) {
@@ -67,10 +76,10 @@ export const useFirebaseSync = () => {
       try {
         dispatch(setSyncStatus("syncing"));
         await setDoc(doc(db, "users", user.uid), {
-          notes: noteState.notes,
-          archived: noteState.archived,
-          trash: noteState.trash,
-          labels: noteState.labels,
+          notes,
+          archived,
+          trash,
+          labels,
           lastUpdated: Date.now(),
         });
         dispatch(setSyncStatus("synced"));
@@ -79,10 +88,11 @@ export const useFirebaseSync = () => {
         dispatch(setSyncStatus("error"));
         console.error("Error syncing data to Firestore:", error);
       }
-    }, 2000);
+    }, 1000);
 
     return () => {
       if (syncTimeoutRef.current) clearTimeout(syncTimeoutRef.current);
     };
-  }, [noteState, user]);
+  }, [notes, archived, trash, labels, user, dispatch]);
+
 };

@@ -16,7 +16,6 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Safe initialization for Build Environment (SSR/Static Generation)
 let app;
 let auth;
 let db;
@@ -27,7 +26,6 @@ if (firebaseConfig.apiKey) {
   auth = getAuth(app);
   googleProvider = new GoogleAuthProvider();
 
-  // Initialize DB with persistence once
   try {
     db = initializeFirestore(app, {
       localCache: persistentLocalCache({
@@ -38,7 +36,6 @@ if (firebaseConfig.apiKey) {
     db = getFirestore(app);
   }
 } else {
-  // Mock objects or null for build time
   console.warn("Firebase API Key missing. Skipping initialization (expected during build).");
 }
 
