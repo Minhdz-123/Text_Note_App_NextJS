@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import ShareModal from "../../Modals/ShareModal";
+import InviteShareModal from "../../Modals/InviteShareModal";
 import {
   NOTE_CARD_BUTTON,
   MORE_OPTION_MENU,
@@ -192,9 +192,10 @@ const NoteCard = ({
       </div>
 
       {showShareModal && (
-        <ShareModal
+        <InviteShareModal
           note={note}
           ownerUid={userInfo?.uid}
+          currentUser={userInfo}
           isOpen={showShareModal}
           onClose={() => setShowShareModal(false)}
           onUpdateNote={(updatedNote) => {

@@ -28,7 +28,6 @@ export default function SharedNotePage() {
 
     const loadNote = async () => {
       const data = await getSharedNote(shareId);
-      console.log("SharedNotePage: Fetched data:", data);
       if (data) {
         setNoteData(data);
         setLoading(false);
@@ -41,7 +40,6 @@ export default function SharedNotePage() {
           }
         });
       } else {
-        console.error("SharedNotePage: No data found for shareId:", shareId);
         setError("Không tìm thấy ghi chú.");
         setLoading(false);
       }

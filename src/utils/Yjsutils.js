@@ -19,11 +19,19 @@ export const getCaptainId = (awareness) => {
   const states = Array.from(awareness.getStates().entries());
   if (states.length === 0) return null;
 
-  const owner = states.find(([_, state]) => state.user?.isOwner);
-  if (owner) return owner[0];
+  const owners = states.filter(([_, state]) => state.user?.isOwner);
 
-  const online = states.map(([id]) => id);
-  return Math.min(...online);
+  if (owners.length > 0) {
+    return owners.sort((a, b) => {
+      const timeDiff = (a[1].user?.joinedAt || 0) - (b[1].user?.joinedAt || 0);
+      return timeDiff !== 0 ? timeDiff : a[0] - b[0];
+    })[0][0];
+  }
+
+  return states.sort((a, b) => {
+    const timeDiff = (a[1].user?.joinedAt || 0) - (b[1].user?.joinedAt || 0);
+    return timeDiff !== 0 ? timeDiff : a[0] - b[0];
+  })[0][0];
 };
 
 export const isCaptain = (awareness) => {

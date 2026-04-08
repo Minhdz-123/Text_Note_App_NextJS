@@ -9,7 +9,14 @@ import { useNoteShare } from "@/src/hooks/useNoteShare";
 import { useInvitations } from "@/src/hooks/useInvitations";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const InviteShareModal = ({ note, ownerUid, isOpen, onClose, onUpdateNote, currentUser }) => {
+const InviteShareModal = ({
+  note,
+  ownerUid,
+  isOpen,
+  onClose,
+  onUpdateNote,
+  currentUser,
+}) => {
   const [email, setEmail] = useState("");
   const [copied, setCopied] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -68,9 +75,13 @@ const InviteShareModal = ({ note, ownerUid, isOpen, onClose, onUpdateNote, curre
   };
 
   return (
-    <BaseModal isOpen={isOpen} onClose={onClose} title={SHARE_NOTE_TEXT.TITLE} className="w-[450px]">
+    <BaseModal
+      isOpen={isOpen}
+      onClose={onClose}
+      title={SHARE_NOTE_TEXT.TITLE}
+      className="w-112.5"
+    >
       <div className="flex flex-col gap-6">
-        
         <div className="flex flex-col gap-3">
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
             {INVITATION_TEXT.TITLE}
@@ -101,7 +112,9 @@ const InviteShareModal = ({ note, ownerUid, isOpen, onClose, onUpdateNote, curre
             </button>
           </form>
           {errorMsg && <span className="text-xs text-red-500">{errorMsg}</span>}
-          {successMsg && <span className="text-xs text-green-500">{successMsg}</span>}
+          {successMsg && (
+            <span className="text-xs text-green-500">{successMsg}</span>
+          )}
         </div>
 
         <div className="w-full h-px bg-gray-200 dark:bg-white/10"></div>
@@ -118,7 +131,7 @@ const InviteShareModal = ({ note, ownerUid, isOpen, onClose, onUpdateNote, curre
               onChange={handleToggleShare}
               disabled={shareLoading}
             />
-            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
           </label>
         </div>
 
@@ -133,13 +146,16 @@ const InviteShareModal = ({ note, ownerUid, isOpen, onClose, onUpdateNote, curre
             >
               {copied ? (
                 <>
-                  <FontAwesomeIcon icon={iconMap.check} className="text-green-500" />
-                  <span className="text-green-500">{SHARE_NOTE_TEXT.COPIED_SUCCESS}</span>
+                  <FontAwesomeIcon
+                    icon={iconMap.check}
+                    className="text-green-500"
+                  />
+                  <span className="text-green-500">
+                    {SHARE_NOTE_TEXT.COPIED_SUCCESS}
+                  </span>
                 </>
               ) : (
-                <>
-                  {SHARE_NOTE_TEXT.COPY_BUTTON}
-                </>
+                <>{SHARE_NOTE_TEXT.COPY_BUTTON}</>
               )}
             </button>
           </div>

@@ -269,11 +269,11 @@ const NoteEditorCollab = (props) => {
     color: "#" + Math.floor(Math.random() * 16777215).toString(16),
     isOwner: false,
   });
+  const joinedAtRef = useRef(Date.now());
 
   useEffect(() => {
     if (userInfo) {
       const ownerStatus = !!(props.ownerUid && String(userInfo.uid) === String(props.ownerUid));
-      console.log(`[Collab] UserUID: ${userInfo.uid}, OwnerUID: ${props.ownerUid}, Match: ${ownerStatus}`);
       setCollabProfile({
         name: userInfo.displayName || userInfo.email?.split("@")[0] || COLLAB_TEXT.DEFAULT_USER_NAME,
         color: collabProfile.color,
@@ -302,7 +302,6 @@ const NoteEditorCollab = (props) => {
     ];
 
     const roomName = `note-room-${props.noteId}`;
-    console.log(`[Collab] Joining room: ${roomName} | isOwner: ${collabProfile.isOwner}`);
 
     const peerOpts = {
       iceServers: [
@@ -318,14 +317,6 @@ const NoteEditorCollab = (props) => {
       peerOpts,
     });
 
-    if (typeof window !== "undefined") {
-      prov.awareness.setLocalStateField("user", {
-        name: collabProfile.name,
-        color: collabProfile.color,
-        isOwner: collabProfile.isOwner,
-      });
-    }
-
     setInstances({ ydoc: doc, provider: prov });
 
     return () => {
@@ -333,7 +324,18 @@ const NoteEditorCollab = (props) => {
       doc.destroy();
       setInstances(null);
     };
-  }, [props.noteId, collabProfile.name, collabProfile.color, collabProfile.isOwner]);
+  }, [props.noteId]);
+
+  useEffect(() => {
+    if (instances?.provider && typeof window !== "undefined") {
+      instances.provider.awareness.setLocalStateField("user", {
+        name: collabProfile.name,
+        color: collabProfile.color,
+        isOwner: collabProfile.isOwner,
+        joinedAt: joinedAtRef.current,
+      });
+    }
+  }, [instances?.provider, collabProfile.name, collabProfile.color, collabProfile.isOwner]);
 
   useEffect(() => {
     if (
