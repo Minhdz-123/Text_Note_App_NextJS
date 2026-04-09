@@ -34,6 +34,6 @@ export const getCaptainId = (awareness) => {
   })[0][0];
 };
 
-export const isCaptain = (awareness) => {
-  return awareness.clientID === getCaptainId(awareness);
+export const isCaptain = (awareness, myId) => {
+  return String(myId) === String(getCaptainId(awareness));
 };

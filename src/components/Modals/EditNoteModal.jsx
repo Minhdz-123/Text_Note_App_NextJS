@@ -69,7 +69,7 @@ const EditNoteModal = ({ isOpen, onClose, note, onSave, onAction }) => {
       {isOpen && note && (
         <NoteEditorCollab
           key={note?.id}
-          noteId={note?.id}
+          noteId={note?.shareId || note?.id}
           ownerUid={userInfo?.uid}
           initialTitle={note?.title}
           initialContent={note?.content}
