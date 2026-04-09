@@ -10,7 +10,13 @@ import { iconMap } from "@/src/utils/Icon";
 import ColorPicker from "../../Commons/ColorPicker";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as Y from "yjs";
-import { WebsocketProvider } from "y-websocket";
+import { createClient } from "@liveblocks/client";
+import { LiveblocksYjsProvider } from "@liveblocks/yjs";
+
+const client = createClient({
+  publicApiKey: "pk_prod_2D7jyL5oj3PUbXZYkmWw4iSIp7qKL6k7_3emOr9VgPODBV0DvR9fWHfUbbDlRI_Y",
+});
+
 import {
   NOTE_PROPERTIES,
   EDIT_NOTE_TEXT,
@@ -21,12 +27,13 @@ import { encodeSnapshot, decodeSnapshot } from "@/src/utils/Yjsutils";
 
 const CollabToast = ({ message, type }) => {
   if (!message) return null;
-  const anim = "transition-all duration-300 transform translate-y-0 opacity-100";
+  const anim =
+    "transition-all duration-300 transform translate-y-0 opacity-100";
   const isSuccess = type === "success";
   const bgColor = isSuccess
     ? "bg-green-100 text-green-800 border-green-300 dark:bg-green-900/50 dark:text-green-200 dark:border-green-800"
     : "bg-red-100 text-red-800 border-red-300 dark:bg-red-900/50 dark:text-red-200 dark:border-red-800";
-  
+
   return (
     <div
       className={`absolute top-4 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-lg border shadow-lg text-sm font-medium flex items-center gap-2 ${bgColor} ${anim}`}
@@ -273,9 +280,14 @@ const NoteEditorCollab = (props) => {
 
   useEffect(() => {
     if (userInfo) {
-      const ownerStatus = !!(props.ownerUid && String(userInfo.uid) === String(props.ownerUid));
+      const ownerStatus = !!(
+        props.ownerUid && String(userInfo.uid) === String(props.ownerUid)
+      );
       setCollabProfile({
-        name: userInfo.displayName || userInfo.email?.split("@")[0] || COLLAB_TEXT.DEFAULT_USER_NAME,
+        name:
+          userInfo.displayName ||
+          userInfo.email?.split("@")[0] ||
+          COLLAB_TEXT.DEFAULT_USER_NAME,
         color: collabProfile.color,
         isOwner: ownerStatus,
       });
@@ -295,23 +307,19 @@ const NoteEditorCollab = (props) => {
     }
 
     const roomName = `note-room-${props.noteId}`;
-    console.log("🔥 [WebRTC/WS Debug] JOINING ROOM:", roomName);
+    console.log("🔥 [Liveblocks Debug] JOINING ROOM:", roomName);
 
-    const prov = new WebsocketProvider(
-      "wss://demos.yjs.dev/ws",
-      roomName,
-      doc
-    );
+    const { room, leave } = client.enterRoom(roomName, { initialPresence: {} });
+    const prov = new LiveblocksYjsProvider(room, doc);
 
-    prov.on('status', event => {
-      console.log("🔥 [WebRTC/WS Debug] WS STATUS:", event.status);
-    });
+    console.log("🔥 [Liveblocks Debug] Provider Initialized");
 
     setInstances({ ydoc: doc, provider: prov });
 
     return () => {
-      console.log("🔥 [WebRTC/WS Debug] LEAVING ROOM:", roomName);
+      console.log("🔥 [Liveblocks Debug] LEAVING ROOM:", roomName);
       prov.destroy();
+      leave();
       doc.destroy();
       setInstances(null);
     };
@@ -326,7 +334,12 @@ const NoteEditorCollab = (props) => {
         joinedAt: joinedAtRef.current,
       });
     }
-  }, [instances?.provider, collabProfile.name, collabProfile.color, collabProfile.isOwner]);
+  }, [
+    instances?.provider,
+    collabProfile.name,
+    collabProfile.color,
+    collabProfile.isOwner,
+  ]);
 
   useEffect(() => {
     if (

@@ -147,15 +147,18 @@ export default function useCollabEditor({
     const awareness = provider.awareness;
     let prevCaptainId = getCaptainId(awareness);
 
-    const myId = awareness.clientID;
-    setIsUserCaptain(myId === prevCaptainId);
+    const myId = ydoc.clientID;
+    setIsUserCaptain(String(myId) === String(prevCaptainId));
     setOnlineCount(awareness.getStates().size);
     updateCaptainInfo(awareness, prevCaptainId);
 
     const handleAwarenessChange = () => {
       const newCaptainId = getCaptainId(awareness);
-      const amICaptain = awareness.clientID === newCaptainId;
+      const amICaptain = String(ydoc.clientID) === String(newCaptainId);
       const statesCount = awareness.getStates().size;
+
+      console.log("🔥 [Captain Debug] States:", Array.from(awareness.getStates().entries()));
+      console.log("🔥 [Captain Debug] My ClientID:", awareness.clientID, "| Captain ID:", newCaptainId, "| AmICaptain:", amICaptain);
 
       setIsUserCaptain(amICaptain);
       setOnlineCount(statesCount);
@@ -183,12 +186,12 @@ export default function useCollabEditor({
     const handleUpdate = () => {
       const awareness = provider.awareness;
 
-      if (!isCaptain(awareness)) return;
+      if (!isCaptain(awareness, ydoc.clientID)) return;
 
       if (debounceRef.current) clearTimeout(debounceRef.current);
 
       debounceRef.current = setTimeout(() => {
-        if (!isCaptain(awareness)) return;
+        if (!isCaptain(awareness, ydoc.clientID)) return;
 
         const content = editor.getHTML();
         const snapshotBase64 = encodeSnapshot(ydoc);
