@@ -102,7 +102,7 @@ export default function TestCollaborationPage() {
                 <div className="bg-white dark:bg-[#202124] rounded-2xl shadow-[0_1px_2px_0_rgba(60,64,67,0.3),0_2px_6px_2px_rgba(60,64,67,0.15)] border border-transparent dark:border-[#5f6368] overflow-hidden">
                   <NoteEditorCollab
                     key={selectedNote.id}
-                    noteId={selectedNote.id}
+                    noteId={selectedNote.shareId || selectedNote.id}
                     ownerUid={user?.uid}
                     initialTitle={selectedNote.title}
                     initialContent={selectedNote.content}

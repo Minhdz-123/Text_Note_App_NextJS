@@ -83,7 +83,7 @@ export default function SharedNotePage() {
         </div>
 
         <NoteEditorCollab
-          noteId={noteData.noteId}
+          noteId={shareId}
           ownerUid={noteData.ownerUid}
           initialTitle={noteData.title}
           initialContent={noteData.content}

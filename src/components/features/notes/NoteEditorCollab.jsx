@@ -10,7 +10,7 @@ import { iconMap } from "@/src/utils/Icon";
 import ColorPicker from "../../Commons/ColorPicker";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import * as Y from "yjs";
-import { WebrtcProvider } from "y-webrtc";
+import { WebsocketProvider } from "y-websocket";
 import {
   NOTE_PROPERTIES,
   EDIT_NOTE_TEXT,
@@ -294,32 +294,23 @@ const NoteEditorCollab = (props) => {
       } catch (e) {}
     }
 
-    const signalingUrls = [
-      "wss://y-webrtc-signaling.p-p.dev",
-      "wss://y-webrtc.fly.dev",
-      "wss://signaling.yjs.dev",
-      "wss://y-webrtc-signaling.up.railway.app",
-    ];
-
     const roomName = `note-room-${props.noteId}`;
+    console.log("🔥 [WebRTC/WS Debug] JOINING ROOM:", roomName);
 
-    const peerOpts = {
-      iceServers: [
-        { urls: "stun:stun.l.google.com:19302" },
-        { urls: "stun:stun1.l.google.com:19302" },
-        { urls: "stun:stun2.l.google.com:19302" },
-        { urls: "stun:global.stun.twilio.com:3478" },
-      ],
-    };
+    const prov = new WebsocketProvider(
+      "wss://demos.yjs.dev/ws",
+      roomName,
+      doc
+    );
 
-    const prov = new WebrtcProvider(roomName, doc, {
-      signalingUrls,
-      peerOpts,
+    prov.on('status', event => {
+      console.log("🔥 [WebRTC/WS Debug] WS STATUS:", event.status);
     });
 
     setInstances({ ydoc: doc, provider: prov });
 
     return () => {
+      console.log("🔥 [WebRTC/WS Debug] LEAVING ROOM:", roomName);
       prov.destroy();
       doc.destroy();
       setInstances(null);
