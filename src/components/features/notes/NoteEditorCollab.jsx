@@ -307,17 +307,13 @@ const NoteEditorCollab = (props) => {
     }
 
     const roomName = `note-room-${props.noteId}`;
-    console.log("🔥 [Liveblocks Debug] JOINING ROOM:", roomName);
 
     const { room, leave } = client.enterRoom(roomName, { initialPresence: {} });
     const prov = new LiveblocksYjsProvider(room, doc);
 
-    console.log("🔥 [Liveblocks Debug] Provider Initialized");
-
     setInstances({ ydoc: doc, provider: prov });
 
     return () => {
-      console.log("🔥 [Liveblocks Debug] LEAVING ROOM:", roomName);
       prov.destroy();
       leave();
       doc.destroy();

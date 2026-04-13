@@ -20,8 +20,12 @@ export default function useNoteUI(actions = {}) {
   const handleAction = (action, note, labelId = null) => {
     switch (action) {
       case "edit_note":
-        setNoteToEdit(note);
-        setEditModalOpen(true);
+        if (actions.onEdit) {
+          actions.onEdit(note);
+        } else {
+          setNoteToEdit(note);
+          setEditModalOpen(true);
+        }
         break;
       case "move_to_storage":
         archiveNote(note.id);

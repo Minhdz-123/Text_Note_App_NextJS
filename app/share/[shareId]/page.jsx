@@ -1,21 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { useNoteShare } from "@/src/hooks/useNoteShare";
 import NoteEditorCollab from "@/src/components/features/notes/NoteEditorCollab";
+import { useVisitedShares } from "@/src/hooks/useVisitedShares";
 import { db } from "@/src/lib/firebase";
 import { doc, onSnapshot } from "firebase/firestore";
 
 export default function SharedNotePage() {
   const { shareId } = useParams();
+  const router = useRouter();
   const user = useSelector((state) => state.user?.userInfo);
   const { getSharedNote, updateSharedNote } = useNoteShare();
   const [noteData, setNoteData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mounted, setMounted] = useState(false);
+  const { recordVisit } = useVisitedShares();
 
   useEffect(() => {
     setMounted(true);
@@ -48,6 +51,21 @@ export default function SharedNotePage() {
     loadNote();
     return () => unsubscribe();
   }, [shareId, mounted]);
+
+  useEffect(() => {
+    if (!noteData || !shareId || !user?.uid) return;
+
+    const timer = setTimeout(() => {
+      recordVisit(shareId, {
+        noteId: noteData.noteId,
+        title: noteData.title,
+        colorClass: noteData.colorClass,
+        ownerUid: noteData.ownerUid
+      });
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [shareId, noteData, user?.uid, recordVisit]);
 
   if (!mounted) return null;
 
@@ -98,6 +116,7 @@ export default function SharedNotePage() {
               lastEditorUid: user?.uid || "anonymous_guest",
             });
           }}
+          onCancel={() => router.push("/")}
         />
       </div>
     </div>

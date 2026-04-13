@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { doc, setDoc, deleteDoc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, setDoc, deleteDoc, getDoc, updateDoc, arrayRemove } from "firebase/firestore";
 import { db } from "@/src/lib/firebase";
 
 export const useNoteShare = () => {
@@ -76,5 +76,20 @@ export const useNoteShare = () => {
     }
   };
 
-  return { enableShare, disableShare, getSharedNote, updateSharedNote, loading };
+  const leaveSharedNote = async (shareId, email) => {
+    setLoading(true);
+    try {
+      const shareDocRef = doc(db, "sharedNotes", shareId);
+      await updateDoc(shareDocRef, {
+        allowedEmails: arrayRemove(email)
+      });
+      setLoading(false);
+    } catch (error) {
+      console.error("useNoteShare: Error leaving shared note:", error);
+      setLoading(false);
+      throw error;
+    }
+  };
+
+  return { enableShare, disableShare, getSharedNote, updateSharedNote, leaveSharedNote, loading };
 };
