@@ -4,6 +4,7 @@ import { iconMap } from "./Icon";
 export const SIDEBAR_MENU = [
   { id: 1, label: "Ghi chú", path: "/", iconKey: "lightbulb" },
   { id: 2, label: "Lời nhắc", path: "/reminders", iconKey: "notification" },
+  { id: 7, label: "Được chia sẻ", path: "/shared", iconKey: "share" },
   { id: 3, label: "Chỉnh sửa nhãn", action: "edit_labels", iconKey: "pen" },
   { id: 4, label: "Lưu trữ", path: "/archive", iconKey: "archive" },
   { id: 5, label: "Thùng rác", path: "/trash", iconKey: "trash" },
@@ -89,6 +90,7 @@ export const SHARE_NOTE_TEXT = {
   COPY_BUTTON: "Sao chép liên kết",
   COPIED_SUCCESS: "Đã sao chép liên kết!",
   CLOSE_BUTTON: "Đóng",
+  ERROR_REQUIRE_LOGIN: "Bạn cần đăng nhập để sử dụng tính năng chia sẻ này",
 };
 
 export const SHORTCUT_MODAL_TEXT = {

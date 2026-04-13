@@ -26,6 +26,11 @@ const InviteShareModal = ({
   const { sendInvite, sendLoading } = useInvitations();
 
   const handleToggleShare = async (e) => {
+    if (!currentUser) {
+      e.preventDefault();
+      alert(SHARE_NOTE_TEXT.ERROR_REQUIRE_LOGIN);
+      return;
+    }
     const isEnabled = e.target.checked;
     if (isEnabled) {
       try {
@@ -56,6 +61,10 @@ const InviteShareModal = ({
 
   const handleSendInvite = async (e) => {
     e.preventDefault();
+    if (!currentUser) {
+      alert(SHARE_NOTE_TEXT.ERROR_REQUIRE_LOGIN);
+      return;
+    }
     setErrorMsg("");
     setSuccessMsg("");
     if (!email) return;
