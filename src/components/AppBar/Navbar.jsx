@@ -44,14 +44,14 @@ const Navbar = ({ onToggleSidebar, onOpenShortcutModal }) => {
               alt="Keep Logo"
               className="w-10 h-10"
             />
-            <span className="text-[#5f6368] dark:text-[#e8eaed] text-[22px] ml-2 font-normal family-google-sans">
+            <span className="hidden sm:inline-block text-[#5f6368] dark:text-[#e8eaed] text-[22px] ml-2 font-normal family-google-sans">
               Keep
             </span>
           </div>
         )}
       </div>
 
-      <div className="flex-1 max-w-180 ml-10 mr-auto">
+      <div className="flex-1 max-w-180 md:ml-10 ml-2 mr-auto md:mr-auto">
         <div className="relative group flex-1">
           <div className="absolute inset-y-0 left-0 pl-4 flex items-center z-10">
             <IconButton

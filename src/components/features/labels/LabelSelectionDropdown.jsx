@@ -27,7 +27,7 @@ const LabelSelectionDropdown = ({
   return (
     <div
       ref={dropdownRef}
-      className="absolute bottom-12 right-0 bg-white dark:bg-[#2d2e31] border border-[#e0e0e0] dark:border-[#5f6368] rounded-lg shadow-lg z-50 min-w-48 max-h-64 overflow-y-auto custom-scrollbar"
+      className="absolute bottom-12 right-0 bg-white dark:bg-[#2d2e31] border border-[#e0e0e0] dark:border-[#5f6368] rounded-lg shadow-lg z-50 min-w-48 max-w-[90vw] max-h-64 overflow-y-auto custom-scrollbar"
     >
       {labels.length === 0 ? (
         <div className="p-3 text-center text-sm text-[#5f6368] dark:text-[#9aa0a6]">

@@ -10,7 +10,7 @@ import { useInvitations } from "@/src/hooks/useInvitations";
 
 const INVITATIONS_PATH = "/test-collaboration/invitations";
 
-const Sidebar = ({ isOpen, labels = [], onEditLabels }) => {
+const Sidebar = ({ isOpen, labels = [], onEditLabels, onClose }) => {
   const [isHovered, setIsHovered] = useState(false);
   const userEmail = useSelector((state) => state.user.userInfo?.email);
   const { invitations } = useInvitations(userEmail);
@@ -81,44 +81,52 @@ const Sidebar = ({ isOpen, labels = [], onEditLabels }) => {
   };
 
   return (
-    <div
-      onMouseEnter={() => !isOpen && setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className={`bg-white dark:bg-[#202124] flex flex-col h-[calc(100vh-64px)] fixed top-16 left-0 overflow-x-hidden pt-2 z-985 transition-all duration-150 ease-in-out shadow-sm ${isExpanded ? "w-70 shadow-xl" : "w-18"
-        }`}
-    >
-      <div className="flex-[1_0_auto]">
-        {SIDEBAR_MENU.filter((item) => item.action !== "edit_labels").map(
-          (item) =>
-            renderSidebarItem(
-              item.id,
-              iconMap[item.iconKey],
-              item.label,
-              item.path,
-            ),
-        )}
+    <>
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/20 dark:bg-black/40 z-[980] md:hidden"
+          onClick={onClose}
+        />
+      )}
+      <div
+        onMouseEnter={() => !isOpen && setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className={`bg-white dark:bg-[#202124] flex flex-col h-[calc(100vh-64px)] fixed top-16 left-0 overflow-x-hidden pt-2 z-[985] transition-all duration-150 ease-in-out shadow-sm ${isExpanded ? "w-70 shadow-xl" : "w-0 md:w-18"
+          }`}
+      >
+        <div className="flex-[1_0_auto]">
+          {SIDEBAR_MENU.filter((item) => item.action !== "edit_labels").map(
+            (item) =>
+              renderSidebarItem(
+                item.id,
+                iconMap[item.iconKey],
+                item.label,
+                item.path,
+              ),
+          )}
 
-        {labels.map((label) =>
-          renderSidebarItem(
-            label.id,
-            iconMap.label,
-            label.name,
-            `/label/${label.name}`,
-          ),
-        )}
-
-        {SIDEBAR_MENU.filter((item) => item.action === "edit_labels").map(
-          (item) =>
+          {labels.map((label) =>
             renderSidebarItem(
-              item.id,
-              iconMap[item.iconKey],
-              item.label,
-              null,
-              onEditLabels,
+              label.id,
+              iconMap.label,
+              label.name,
+              `/label/${label.name}`,
             ),
-        )}
+          )}
+
+          {SIDEBAR_MENU.filter((item) => item.action === "edit_labels").map(
+            (item) =>
+              renderSidebarItem(
+                item.id,
+                iconMap[item.iconKey],
+                item.label,
+                null,
+                onEditLabels,
+              ),
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -23,11 +23,11 @@ const ColorPicker = ({ onColorSelect, onClose }) => {
 
   return (
     <div
-      className="absolute bottom-12 left-0 p-3 bg-white dark:bg-[#2d2e31] border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50"
+      className="absolute bottom-12 left-0 p-3 bg-white dark:bg-[#2d2e31] border border-gray-200 dark:border-gray-600 rounded-lg shadow-lg z-50 max-w-[90vw] sm:max-w-max"
       ref={pickerRef}
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="flex flex-wrap gap-2 w-max">
+      <div className="flex flex-wrap gap-2 w-max max-w-full">
         {COLOR_PALETTE.map((color) => (
           <button
             key={color.id}

@@ -17,7 +17,7 @@ const BaseModal = ({
       onClick={onClose}
     >
       <div
-        className={`${className} ${!className.includes("bg-") ? "bg-white dark:bg-[#2d2e31]" : ""} rounded-lg shadow-lg flex flex-col text-[#202124] dark:text-[#e8eaed]`}
+        className={`${className} max-w-[95vw] max-h-[95vh] ${!className.includes("bg-") ? "bg-white dark:bg-[#2d2e31]" : ""} rounded-lg shadow-lg flex flex-col text-[#202124] dark:text-[#e8eaed]`}
         onClick={(e) => e.stopPropagation()}
       >
         {customHeader && customHeader}

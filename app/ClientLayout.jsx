@@ -58,11 +58,12 @@ function LayoutContent({ children }) {
           isOpen={sidebarOpen}
           labels={labels}
           onEditLabels={() => setIsModalOpen(true)}
+          onClose={handleToggleSidebar}
         />
 
         <main
           className={`flex-1 transition-all duration-150 pt-16 ${
-            sidebarOpen ? "ml-70" : "ml-18"
+            sidebarOpen ? "md:ml-70 ml-0" : "md:ml-18 ml-0"
           }`}
         >
           <div className="p-4">{children}</div>
